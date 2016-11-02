@@ -25,14 +25,7 @@
         <activity
             android:name=".FarmActivity.FarmActivity"
             android:label="@string/title_activity_farm"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTop">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
-            </intent-filter>
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
