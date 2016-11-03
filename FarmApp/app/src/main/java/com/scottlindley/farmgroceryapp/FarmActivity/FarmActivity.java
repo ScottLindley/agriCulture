@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
+import com.scottlindley.farmgroceryapp.FarmList.FarmListRecyclerAdapter;
 import com.scottlindley.farmgroceryapp.R;
 
 public class FarmActivity extends AppCompatActivity
@@ -27,6 +30,12 @@ public class FarmActivity extends AppCompatActivity
         setContentView(R.layout.activity_farm);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Intent receivedIntent = getIntent();
+        int selectedFarmID = receivedIntent.getIntExtra(FarmListRecyclerAdapter.FARM_ID_INTENT_KEY, -1);
+        if(selectedFarmID==-1){
+            finish();
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -45,6 +54,13 @@ public class FarmActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        ViewPager viewPager = (ViewPager)findViewById(R.id.view_pager);
+        FarmPagerAdapter pagerAdapter = new FarmPagerAdapter(getSupportFragmentManager(), selectedFarmID);
+        viewPager.setAdapter(pagerAdapter);
+
+        TabLayout tabLayout = (TabLayout)findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.scottlindley.farmgroceryapp;
 
+import java.util.List;
+
 import static android.R.attr.id;
 
 /**
@@ -8,8 +10,10 @@ import static android.R.attr.id;
 
 public class Farm {
     private String mName, mStory, mState, mSpecialty;
-    private int mNumLikes, mID;
-    int mPhotoID;
+    private int mID;
+    private int mPhotoID;
+    private List<Like> mNumLikes;
+    private List<Food> mInventory;
 
     public Farm(int ID, String name, String story, String specialty, String state) {
         mID = id;
@@ -17,6 +21,8 @@ public class Farm {
         mStory = story;
         mState = state;
         mSpecialty = specialty;
+
+
         switch (mName) {
             case "McDonald Farms":
                 mPhotoID = (R.drawable.mcdonald);
@@ -59,7 +65,7 @@ public class Farm {
         return mSpecialty;
     }
 
-    public int getNumLikes() {
+    public List<Like> getNumLikes() {
         return mNumLikes;
     }
 

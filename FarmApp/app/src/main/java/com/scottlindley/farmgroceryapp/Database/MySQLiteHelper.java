@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.scottlindley.farmgroceryapp.Farm;
+import com.scottlindley.farmgroceryapp.Food;
+import com.scottlindley.farmgroceryapp.Like;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,6 +134,74 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         }
         cursor.close();
         return allFarms;
+    }
+
+    public Farm getFarmByID(int farmID){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(
+                FARMS_TABLE_NAME, null,
+                COL_ID+" = ?",
+                new String[]{String.valueOf(farmID)},
+                null,null,null);
+
+        if(cursor.moveToFirst()) {
+            return (new Farm(
+                    cursor.getInt(cursor.getColumnIndex(COL_ID)),
+                    cursor.getString(cursor.getColumnIndex(COL_NAME)),
+                    cursor.getString(cursor.getColumnIndex(COL_STORY)),
+                    cursor.getString(cursor.getColumnIndex(COL_SPECIALTY)),
+                    cursor.getString(cursor.getColumnIndex(COL_STATE))));
+        }
+        cursor.close();
+        System.out.println("IT's GONNA BE NULL");
+        return null;
+        //TODO: THIS IS BROKEN, FIX IT
+    }
+
+    public List<Food> getFoodByFarm(int farmID){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(
+                FOODS_TABLE_NAME,
+                new String[]{COL_NAME, COL_PRICE},
+                COL_FARM_ID+" = ?",
+                new String[]{String.valueOf(farmID)},
+                null,null,null);
+
+        List<Food> foods = new ArrayList<>();
+
+        if(cursor.moveToFirst()){
+            while(!cursor.isAfterLast()){
+                foods.add(new Food(
+                        cursor.getString(cursor.getColumnIndex(COL_NAME)),
+                        cursor.getDouble(cursor.getColumnIndex(COL_PRICE))));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        return foods;
+    }
+
+    public List<Like> getLikes(int farmID){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(
+                LIKES_TABLE_NAME, null,
+                COL_FARM_ID+" = ?",
+                new String[]{String.valueOf(farmID)},
+                null,null,null);
+
+        List<Like> likes = new ArrayList<>();
+
+        if(cursor.moveToFirst()){
+            while(!cursor.isAfterLast()){
+                likes.add(new Like(
+                        cursor.getInt(cursor.getColumnIndex(COL_ID)),
+                        cursor.getInt(cursor.getColumnIndex(COL_FARM_ID)),
+                        cursor.getInt(cursor.getColumnIndex(COL_FARM_ID))));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        return likes;
     }
 
 }
