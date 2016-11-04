@@ -24,7 +24,7 @@ public class Farm {
             case "McDonald Farms":
                 mPhotoID = (R.drawable.mcdonald);
                 break;
-            case "Stony Hill Farms":
+            case "Stoney Hill Farms":
                 mPhotoID = (R.drawable.stony_hill);
                 break;
             case "Sunny Side Farms":
@@ -36,7 +36,7 @@ public class Farm {
             case "The Funny Farm":
                 mPhotoID = (R.drawable.funny);
                 break;
-            case "Turnup the Beet":
+            case "Turnip the Beet":
                 mPhotoID = (R.drawable.beet);
                 break;
             case "Scare Crow Farms":
