@@ -2,8 +2,6 @@ package com.scottlindley.farmgroceryapp;
 
 import java.util.List;
 
-import static android.R.attr.id;
-
 /**
  * Created by Scott Lindley on 11/1/2016.
  */
@@ -16,12 +14,11 @@ public class Farm {
     private List<Food> mInventory;
 
     public Farm(int ID, String name, String story, String specialty, String state) {
-        mID = id;
+        mID = ID;
         mName = name;
         mStory = story;
         mState = state;
         mSpecialty = specialty;
-
 
         switch (mName) {
             case "McDonald Farms":
@@ -45,7 +42,33 @@ public class Farm {
             case "Scare Crow Farms":
                 mPhotoID = (R.drawable.scarecrow);
                 break;
-
+            case "Couch Potato Farms":
+                mPhotoID = (R.drawable.couch_potato);
+                break;
+            case "Peter Piper Farms":
+                mPhotoID = (R.drawable.pickled_peppers);
+                break;
+            case "Strawberry Fields":
+                mPhotoID = (R.drawable.strawberry_fields);
+                break;
+            case "Buffalo Hill Gardens":
+                mPhotoID = (R.drawable.buffalo_hills);
+                break;
+            case "Deer Cove Acres":
+                mPhotoID = (R.drawable.deer_cove);
+                break;
+            case "Angry Beaver Nursery":
+                mPhotoID = (R.drawable.angry_beaver);
+                break;
+            case "Big Bear Orchard":
+                mPhotoID = (R.drawable.bear_orchard);
+                break;
+            case "Bumble Bee Lands":
+                mPhotoID = (R.drawable.bee_land);
+                break;
+            case "Flower Hills Range":
+                mPhotoID = (R.drawable.flower_hill);
+                break;
         }
     }
 
@@ -75,5 +98,13 @@ public class Farm {
 
     public int getPhotoID(){
         return mPhotoID;
+    }
+
+    public void setNumLikes(List<Like> numLikes) {
+        mNumLikes = numLikes;
+    }
+
+    public void setInventory(List<Food> inventory) {
+        mInventory = inventory;
     }
 }

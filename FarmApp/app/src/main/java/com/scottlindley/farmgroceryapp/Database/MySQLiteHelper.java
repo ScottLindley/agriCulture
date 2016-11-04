@@ -141,21 +141,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         Cursor cursor = db.query(
                 FARMS_TABLE_NAME, null,
                 COL_ID+" = ?",
-                new String[]{String.valueOf(farmID)},
+                new String[]{Integer.toString(farmID)},
                 null,null,null);
 
         if(cursor.moveToFirst()) {
-            return (new Farm(
-                    cursor.getInt(cursor.getColumnIndex(COL_ID)),
-                    cursor.getString(cursor.getColumnIndex(COL_NAME)),
-                    cursor.getString(cursor.getColumnIndex(COL_STORY)),
-                    cursor.getString(cursor.getColumnIndex(COL_SPECIALTY)),
-                    cursor.getString(cursor.getColumnIndex(COL_STATE))));
+            int id = cursor.getInt(cursor.getColumnIndex(COL_ID));
+            String name = cursor.getString(cursor.getColumnIndex(COL_NAME));
+            String story = cursor.getString(cursor.getColumnIndex(COL_STORY));
+            String specialty = cursor.getString(cursor.getColumnIndex(COL_SPECIALTY));
+            String state = cursor.getString(cursor.getColumnIndex(COL_STATE));
+            return new Farm(id,name,story,specialty,state);
         }
         cursor.close();
-        System.out.println("IT's GONNA BE NULL");
         return null;
-        //TODO: THIS IS BROKEN, FIX IT
     }
 
     public List<Food> getFoodByFarm(int farmID){

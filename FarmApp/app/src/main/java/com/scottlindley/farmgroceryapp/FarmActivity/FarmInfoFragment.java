@@ -3,7 +3,6 @@ package com.scottlindley.farmgroceryapp.FarmActivity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,13 +42,22 @@ public class FarmInfoFragment extends Fragment {
 
         Farm selectedFarm = MySQLiteHelper.getInstance(view.getContext()).getFarmByID(farmID);
 
-        ImageView photo = (ImageView)view.findViewById(R.id.farm_photo);
-        TextView name = (TextView)view.findViewById(R.id.farm_name);
+        ImageView photo = (ImageView)view.findViewById(R.id.farm_photo_fragment);
         TextView story = (TextView)view.findViewById(R.id.farm_story);
         TextView state = (TextView)view.findViewById(R.id.farm_state);
+        TextView specialty = (TextView)view.findViewById(R.id.farm_specialty);
 
-        Log.d("TAG", "onViewCreated: "+farmID);
+        /*
+        States in the database are all lowercase to make searching easier this line
+        of code capitalizes the first letter
+        */
+        String upperCaseState = Character.toString(selectedFarm.getState().charAt(0)).toUpperCase()
+                +selectedFarm.getState().substring(1,selectedFarm.getState().length());
+
         photo.setImageResource(selectedFarm.getPhotoID());
         story.setText(selectedFarm.getStory());
+        state.setText(upperCaseState);
+        specialty.setText(selectedFarm.getSpecialty());
+
     }
 }

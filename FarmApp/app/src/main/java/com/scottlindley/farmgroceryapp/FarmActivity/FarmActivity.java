@@ -12,55 +12,38 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListRecyclerAdapter;
 import com.scottlindley.farmgroceryapp.R;
 
+import static com.scottlindley.farmgroceryapp.R.id.toolbar;
+
 public class FarmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private int mSelectedFarmID;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_farm);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(toolbar);
+        setSupportActionBar(mToolbar);
 
-        Intent receivedIntent = getIntent();
-        int selectedFarmID = receivedIntent.getIntExtra(FarmListRecyclerAdapter.FARM_ID_INTENT_KEY, -1);
-        if(selectedFarmID==-1){
-            finish();
-        }
+        getReceivedIntent();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "This does nothing yet", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        setUpFloatingActionButton();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        setUpNavBar();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        setUpViewPagerAndTabs();
 
-        ViewPager viewPager = (ViewPager)findViewById(R.id.view_pager);
-        FarmPagerAdapter pagerAdapter = new FarmPagerAdapter(getSupportFragmentManager(), selectedFarmID);
-        viewPager.setAdapter(pagerAdapter);
-
-        TabLayout tabLayout = (TabLayout)findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
+        setToolBarTitle();
     }
 
     @Override
@@ -71,27 +54,6 @@ public class FarmActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.farm, menu);
-        return true;
     }
 
     @Override
@@ -117,5 +79,48 @@ public class FarmActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void getReceivedIntent(){
+        Intent receivedIntent = getIntent();
+        mSelectedFarmID = receivedIntent.getIntExtra(FarmListRecyclerAdapter.FARM_ID_INTENT_KEY, -1);
+        if(mSelectedFarmID ==-1){
+            finish();
+        }
+    }
+
+    public void setUpFloatingActionButton(){
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "This does nothing yet", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+    }
+
+    public void setUpNavBar(){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public void setUpViewPagerAndTabs(){
+        ViewPager viewPager = (ViewPager)findViewById(R.id.view_pager);
+        FarmPagerAdapter pagerAdapter = new FarmPagerAdapter(getSupportFragmentManager(), mSelectedFarmID);
+        viewPager.setAdapter(pagerAdapter);
+
+        TabLayout tabLayout = (TabLayout)findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    public void setToolBarTitle(){
+        setTitle(MySQLiteHelper.getInstance(FarmActivity.this).getFarmByID(mSelectedFarmID).getName());
     }
 }
