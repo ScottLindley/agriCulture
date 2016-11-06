@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.scottlindley.farmgroceryapp.Farm;
+import com.scottlindley.farmgroceryapp.CustomObjects.Farm;
 import com.scottlindley.farmgroceryapp.FarmActivity.FarmActivity;
 import com.scottlindley.farmgroceryapp.R;
 

@@ -1,49 +1,37 @@
-package com.scottlindley.farmgroceryapp.FarmActivity;
+package com.scottlindley.farmgroceryapp.CartActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.scottlindley.farmgroceryapp.CartActivity.CartActivity;
-import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
-import com.scottlindley.farmgroceryapp.FarmList.FarmListRecyclerAdapter;
 import com.scottlindley.farmgroceryapp.R;
 
 import static com.scottlindley.farmgroceryapp.R.id.toolbar;
 
-public class FarmActivity extends AppCompatActivity
+public class CartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    private int mSelectedFarmID;
     private Toolbar mToolbar;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_farm);
+        setContentView(R.layout.activity_cart);
         mToolbar = (Toolbar) findViewById(toolbar);
         setSupportActionBar(mToolbar);
 
-        getReceivedIntent();
-
-        setUpFloatingActionButton();
-
         setUpNavBar();
 
-        setUpViewPagerAndTabs();
-
-        setToolBarTitle();
+        setUpRecyclerView();
     }
 
     @Override
@@ -56,6 +44,7 @@ public class FarmActivity extends AppCompatActivity
         }
     }
 
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -64,7 +53,7 @@ public class FarmActivity extends AppCompatActivity
         if (id == R.id.nav_like) {
 
         } else if (id == R.id.nav_cart) {
-            startActivity(new Intent(FarmActivity.this, CartActivity.class));
+
         } else if (id == R.id.nav_order_history) {
 
         } else if (id == R.id.nav_settings) {
@@ -74,30 +63,11 @@ public class FarmActivity extends AppCompatActivity
             startActivity(intent);
         }
 
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public void getReceivedIntent(){
-        Intent receivedIntent = getIntent();
-        mSelectedFarmID = receivedIntent.getIntExtra(FarmListRecyclerAdapter.FARM_ID_INTENT_KEY, -1);
-        if(mSelectedFarmID ==-1){
-            finish();
-        }
-    }
-
-    public void setUpFloatingActionButton(){
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(FarmActivity.this, CartActivity.class));
-            }
-        });
-    }
 
     public void setUpNavBar(){
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -110,16 +80,9 @@ public class FarmActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void setUpViewPagerAndTabs(){
-        ViewPager viewPager = (ViewPager)findViewById(R.id.view_pager);
-        FarmPagerAdapter pagerAdapter = new FarmPagerAdapter(getSupportFragmentManager(), mSelectedFarmID);
-        viewPager.setAdapter(pagerAdapter);
+    public void setUpRecyclerView(){
+        mRecyclerView = (RecyclerView)findViewById(R.id.cart_recycler);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
 
-        TabLayout tabLayout = (TabLayout)findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-    }
-
-    public void setToolBarTitle(){
-        setTitle(MySQLiteHelper.getInstance(FarmActivity.this).getFarmByID(mSelectedFarmID).getName());
     }
 }

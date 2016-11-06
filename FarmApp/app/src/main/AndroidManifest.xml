@@ -11,20 +11,28 @@
         <activity
             android:name=".FarmList.FarmListActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
+
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".FarmActivity.FarmActivity"
             android:label="@string/title_activity_farm"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".CartActivity.CartActivity"
+            android:label="@string/title_activity_cart"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>

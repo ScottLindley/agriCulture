@@ -5,9 +5,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.scottlindley.farmgroceryapp.Farm;
-import com.scottlindley.farmgroceryapp.Food;
-import com.scottlindley.farmgroceryapp.Like;
+import com.scottlindley.farmgroceryapp.CustomObjects.Farm;
+import com.scottlindley.farmgroceryapp.CustomObjects.Food;
+import com.scottlindley.farmgroceryapp.CustomObjects.Like;
+import com.scottlindley.farmgroceryapp.CustomObjects.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +151,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
             String story = cursor.getString(cursor.getColumnIndex(COL_STORY));
             String specialty = cursor.getString(cursor.getColumnIndex(COL_SPECIALTY));
             String state = cursor.getString(cursor.getColumnIndex(COL_STATE));
-            return new Farm(id,name,story,specialty,state);
+            Farm farm =  new Farm(id,name,story,specialty,state);
+            cursor.close();
+            return farm;
         }
         cursor.close();
         return null;
@@ -164,6 +167,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 COL_FARM_ID+" = ?",
                 new String[]{String.valueOf(farmID)},
                 null,null,null);
+        Farm farm = getFarmByID(farmID);
 
         List<Food> foods = new ArrayList<>();
 
@@ -171,7 +175,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
             while(!cursor.isAfterLast()){
                 foods.add(new Food(
                         cursor.getString(cursor.getColumnIndex(COL_NAME)),
-                        cursor.getDouble(cursor.getColumnIndex(COL_PRICE))));
+                        cursor.getDouble(cursor.getColumnIndex(COL_PRICE)),
+                        farm.getName()));
                 cursor.moveToNext();
             }
         }
@@ -194,12 +199,32 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 likes.add(new Like(
                         cursor.getInt(cursor.getColumnIndex(COL_ID)),
                         cursor.getInt(cursor.getColumnIndex(COL_FARM_ID)),
-                        cursor.getInt(cursor.getColumnIndex(COL_FARM_ID))));
+                        cursor.getInt(cursor.getColumnIndex(COL_USER_ID))));
                 cursor.moveToNext();
             }
         }
         cursor.close();
         return likes;
+    }
+
+    public User getUserByID(int userID){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(
+                USER_TABLE_NAME, null,
+                COL_ID+" = ?",
+                new String[]{String.valueOf(userID)},
+                null,null,null);
+
+
+        if(cursor.moveToFirst()){
+            User user = new User(
+                    cursor.getString(cursor.getColumnIndex(COL_NAME)),
+                    cursor.getString(cursor.getColumnIndex(COL_STATE)));
+            cursor.close();
+            return user;
+        }
+        cursor.close();
+        return null;
     }
 
 }

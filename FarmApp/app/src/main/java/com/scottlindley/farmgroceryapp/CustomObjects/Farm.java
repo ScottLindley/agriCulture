@@ -1,4 +1,6 @@
-package com.scottlindley.farmgroceryapp;
+package com.scottlindley.farmgroceryapp.CustomObjects;
+
+import com.scottlindley.farmgroceryapp.R;
 
 import java.util.List;
 

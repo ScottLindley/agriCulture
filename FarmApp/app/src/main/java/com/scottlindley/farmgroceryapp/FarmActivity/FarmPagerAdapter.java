@@ -24,8 +24,8 @@ public class FarmPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0: return FarmInfoFragment.newInstance(mBundle);
-            case 1: return FarmInfoFragment.newInstance(mBundle);
-            case 2: return FarmInfoFragment.newInstance(mBundle);
+            case 1: return FarmProduceFragment.newInstance(mBundle);
+            case 2: return FarmLikesFragment.newInstance(mBundle);
             default: return null;
         }
     }

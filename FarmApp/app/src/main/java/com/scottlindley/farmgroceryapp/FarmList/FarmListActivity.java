@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,9 +19,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.scottlindley.farmgroceryapp.CartActivity.CartActivity;
 import com.scottlindley.farmgroceryapp.Database.DBAssetsHelper;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
-import com.scottlindley.farmgroceryapp.Farm;
+import com.scottlindley.farmgroceryapp.CustomObjects.Farm;
 import com.scottlindley.farmgroceryapp.R;
 
 import java.util.List;
@@ -57,8 +57,7 @@ public class FarmListActivity extends AppCompatActivity
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "This does nothing yet", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(new Intent(FarmListActivity.this, CartActivity.class));
             }
         });
 
@@ -121,6 +120,7 @@ public class FarmListActivity extends AppCompatActivity
         if (id == R.id.nav_like) {
 
         } else if (id == R.id.nav_cart) {
+            startActivity(new Intent(FarmListActivity.this, CartActivity.class));
 
         } else if (id == R.id.nav_order_history) {
 
