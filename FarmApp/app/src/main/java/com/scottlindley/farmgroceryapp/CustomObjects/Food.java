@@ -103,19 +103,24 @@ public class Food {
         }
     }
 
+
     public int getQuantity() {
         return mQuantity;
     }
 
+    public void setQuantity(int quantity){
+        mQuantity = quantity;
+    }
+
     public void incrementQuantity(){
         mQuantity++;
-        mPrice = mPriceForOne * mQuantity;
+        mPrice = roundPrice(mPriceForOne * mQuantity);
     }
 
     public void decrementQuantity(){
         if(mQuantity>0) {
             mQuantity--;
-            mPrice = mPriceForOne * mQuantity;
+            mPrice = roundPrice(mPriceForOne * mQuantity);
         }
     }
 
@@ -133,5 +138,13 @@ public class Food {
 
     public double getPrice() {
         return mPrice;
+    }
+
+    public double roundPrice(double price){
+        double roundedPrice = price*100;
+        roundedPrice = Math.round(roundedPrice);
+        roundedPrice = roundedPrice/100;
+
+        return roundedPrice;
     }
 }

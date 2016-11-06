@@ -10,9 +10,13 @@ import java.util.List;
 public class Cart {
     private List<Food> mItems;
     private static Cart sCart;
+    private double mTax, mSubTotal, mTotal;
 
     private Cart(){
         mItems = new ArrayList<>();
+        mSubTotal = 0;
+        mTax = 0;
+        mTotal = 0;
     }
 
     /*
@@ -29,6 +33,43 @@ public class Cart {
             }
         }
         mItems = revisedList;
+    }
+
+    public void clearCart(){
+        for (Food food : mItems){
+            food.setQuantity(0);
+        }
+        removeZeroQuantities();
+    }
+
+    public double getTax() {
+        setTax();
+        return mTax;
+    }
+
+    public void setTax() {
+        mTax = mSubTotal * 0.08875;
+    }
+
+    public double getSubTotal() {
+        setSubTotal();
+        return mSubTotal;
+    }
+
+    public void setSubTotal() {
+        mSubTotal = 0;
+        for (Food food : mItems){
+            mSubTotal += food.getPrice();
+        }
+    }
+
+    public double getTotal() {
+        setTotal();
+        return mTotal;
+    }
+
+    public void setTotal() {
+        mTotal = mSubTotal + mTax;
     }
 
     public static Cart getInstance(){

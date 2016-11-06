@@ -41,6 +41,9 @@ public class FarmProduceRecyclerViewAdapter extends RecyclerView.Adapter<FarmPro
         holder.mAddToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(mFoods.get(position).getQuantity()==0){
+                    mFoods.get(position).incrementQuantity();
+                }
                 Cart.getInstance().getItems().add(mFoods.get(position));
                 Toast.makeText(view.getContext(), mFoods.get(position).getName()+
                         " added to cart", Toast.LENGTH_SHORT).show();

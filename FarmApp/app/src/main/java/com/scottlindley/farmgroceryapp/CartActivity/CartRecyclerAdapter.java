@@ -19,11 +19,12 @@ import java.util.List;
  */
 
 public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapter.CartViewHolder>{
+    private List<Food> mItems;
+    private QuantityButtonListener mListener;
 
-    List<Food> mItems;
-
-    public CartRecyclerAdapter() {
+    public CartRecyclerAdapter(QuantityButtonListener listener) {
         mItems = consolidateDuplicates(Cart.getInstance().getItems());
+        mListener = listener;
     }
 
     @Override
@@ -46,6 +47,7 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
                 Cart.getInstance().getItems().get(holder.getAdapterPosition()).incrementQuantity();
                 replaceData();
                 notifyItemChanged(holder.getAdapterPosition());
+                mListener.handleIncrement();
             }
         });
 
@@ -55,6 +57,7 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
                 Cart.getInstance().getItems().get(holder.getAdapterPosition()).decrementQuantity();
                 replaceData();
                 notifyItemChanged(holder.getAdapterPosition());
+                mListener.handleIncrement();
             }
         });
     }
@@ -91,6 +94,10 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
     public void replaceData(){
         mItems = consolidateDuplicates(Cart.getInstance().getItems());
         notifyDataSetChanged();
+    }
+
+    public interface QuantityButtonListener{
+        public void handleIncrement();
     }
 
 

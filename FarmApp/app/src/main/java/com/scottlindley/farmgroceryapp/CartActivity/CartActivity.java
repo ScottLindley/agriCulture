@@ -7,10 +7,14 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.scottlindley.farmgroceryapp.CustomObjects.Cart;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
@@ -19,10 +23,20 @@ import com.scottlindley.farmgroceryapp.R;
 import static com.scottlindley.farmgroceryapp.R.id.toolbar;
 
 public class CartActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, CartRecyclerAdapter.QuantityButtonListener {
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private CartRecyclerAdapter mAdapter;
+    private TextView mSubTotal, mTotal, mTax;
+    private CardView mPlaceOrderButton;
+    private double mRoundedSubTotal, mRoundedTax, mRoundedTotal;
+
+    @Override
+    public void handleIncrement() {
+        roundNumbers();
+
+        setRoundedPrices();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +48,17 @@ public class CartActivity extends AppCompatActivity
         setUpNavBar();
 
         setUpRecyclerView();
+
+        setUpOrderButton();
+
+        mSubTotal = (TextView)findViewById(R.id.subtotal);
+        mTax = (TextView)findViewById(R.id.tax);
+        mTotal = (TextView)findViewById(R.id.total);
+
+        roundNumbers();
+
+        setRoundedPrices();
+
     }
 
     @Override
@@ -85,8 +110,37 @@ public class CartActivity extends AppCompatActivity
     public void setUpRecyclerView(){
         mRecyclerView = (RecyclerView)findViewById(R.id.cart_recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
-        mAdapter = new CartRecyclerAdapter();
+        mAdapter = new CartRecyclerAdapter(CartActivity.this);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public void setUpOrderButton(){
+        mPlaceOrderButton = (CardView)findViewById(R.id.place_order_button);
+        mPlaceOrderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Cart.getInstance().clearCart();
+                mAdapter.replaceData();
+                Toast.makeText(CartActivity.this, "Order Confirmed!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void roundNumbers(){
+        mRoundedSubTotal = (Cart.getInstance().getSubTotal()*100);
+        mRoundedSubTotal = Math.round(mRoundedSubTotal);
+        mRoundedSubTotal = mRoundedSubTotal/100;
+        mRoundedTax = Math.round(Cart.getInstance().getTax()*100);
+        mRoundedTax = Math.round(mRoundedTax);
+        mRoundedTax = mRoundedTax/100;
+        mRoundedTotal = Math.round(Cart.getInstance().getTotal()*100);
+        mRoundedTotal = mRoundedTotal/100;
+    }
+
+    public void setRoundedPrices(){
+        mSubTotal.setText("$"+ mRoundedSubTotal);
+        mTax.setText("$"+ mRoundedTax);
+        mTotal.setText("$"+ mRoundedTotal);
     }
 
     @Override

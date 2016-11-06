@@ -39,7 +39,7 @@ public class FarmPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position){
             case 0: return "Info";
-            case 1: return "Crops";
+            case 1: return "Produce";
             case 2: return "Likes";
             default: return null;
         }
