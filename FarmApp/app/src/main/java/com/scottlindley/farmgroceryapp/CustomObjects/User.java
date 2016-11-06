@@ -13,11 +13,21 @@ public class User {
         mState = state;
     }
 
+    public User(String name, String state, int ID) {
+        mName = name;
+        mState = state;
+        mID = ID;
+    }
+
     public String getName() {
         return mName;
     }
 
     public String getState() {
         return mState;
+    }
+
+    public int getID() {
+        return mID;
     }
 }

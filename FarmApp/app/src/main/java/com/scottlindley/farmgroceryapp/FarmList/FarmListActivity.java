@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -18,18 +19,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.scottlindley.farmgroceryapp.CartActivity.CartActivity;
+import com.scottlindley.farmgroceryapp.CustomObjects.Farm;
 import com.scottlindley.farmgroceryapp.Database.DBAssetsHelper;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
-import com.scottlindley.farmgroceryapp.CustomObjects.Farm;
 import com.scottlindley.farmgroceryapp.R;
+import com.scottlindley.farmgroceryapp.SignUpActivity;
 
 import java.util.List;
 
 public class FarmListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    public static final String PREFERENCES_KEY = "preferences";
+    public static final String DEVICE_USER_ID_KEY = "device_user_id";
+    private int mDeviceUserID;
 
+    private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private FarmListRecyclerAdapter mAdapter;
     private FloatingActionButton mFAB;
@@ -39,37 +46,19 @@ public class FarmListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_farm_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         DBAssetsHelper dbAssetSetUp = new DBAssetsHelper(FarmListActivity.this);
         dbAssetSetUp.getReadableDatabase();
 
-        mFarms = MySQLiteHelper.getInstance(FarmListActivity.this).getAllFarms();
+        checkForDeviceUser();
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(FarmListActivity.this, 2));
+        setUpRecyclerView();
 
-        mAdapter = new FarmListRecyclerAdapter(mFarms);
-        mRecyclerView.setAdapter(mAdapter);
+        setUpFloatingActionButton();
 
-        mFAB = (FloatingActionButton) findViewById(R.id.fab);
-        mFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(FarmListActivity.this, CartActivity.class));
-            }
-        });
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        setUpNavBar();
     }
 
     @Override
@@ -111,7 +100,6 @@ public class FarmListActivity extends AppCompatActivity
 
 
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -134,4 +122,56 @@ public class FarmListActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public void setUpFloatingActionButton(){
+        mFAB = (FloatingActionButton) findViewById(R.id.fab);
+        mFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(FarmListActivity.this, CartActivity.class));
+            }
+        });
+    }
+
+    public void checkForDeviceUser(){
+        SharedPreferences preferences = getSharedPreferences(PREFERENCES_KEY, MODE_PRIVATE);
+        mDeviceUserID = preferences.getInt(DEVICE_USER_ID_KEY, -1);
+        if (mDeviceUserID==-1) {
+            startActivity(new Intent(FarmListActivity.this, SignUpActivity.class));
+            finish();
+        }
+    }
+
+    public void setUpRecyclerView(){
+        mFarms = MySQLiteHelper.getInstance(FarmListActivity.this).getAllFarms();
+
+        mRecyclerView = (RecyclerView)findViewById(R.id.recyclerview);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(FarmListActivity.this, 2));
+
+        mAdapter = new FarmListRecyclerAdapter(mFarms);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public void setUpNavBar(){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer,mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUserName = (TextView)headerView.findViewById(R.id.nav_user_name);
+        TextView navUserState = (TextView)headerView.findViewById(R.id.nav_user_state);
+
+        if(mDeviceUserID!=-1) {
+            navUserName.setText(
+                    MySQLiteHelper.getInstance(FarmListActivity.this).getUserByID(mDeviceUserID).getName());
+            navUserState.setText(
+                    MySQLiteHelper.getInstance(FarmListActivity.this).getUserByID(mDeviceUserID).getState());
+        }
+    }
+
 }

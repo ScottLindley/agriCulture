@@ -1,5 +1,6 @@
 package com.scottlindley.farmgroceryapp.Database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -215,7 +216,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 new String[]{String.valueOf(userID)},
                 null,null,null);
 
-
         if(cursor.moveToFirst()){
             User user = new User(
                     cursor.getString(cursor.getColumnIndex(COL_NAME)),
@@ -225,6 +225,29 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         }
         cursor.close();
         return null;
+    }
+
+    public User getLastUser(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(
+                USER_TABLE_NAME, null,null,null,null,null,null);
+
+        if(cursor.moveToLast()){
+            return new User(
+                    cursor.getString(cursor.getColumnIndex(COL_NAME)),
+                    cursor.getString(cursor.getColumnIndex(COL_STATE)),
+                    cursor.getInt(cursor.getColumnIndex(COL_ID)));
+        }
+        return null;
+    }
+
+    public void insertUser(User user){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_NAME, user.getName());
+        values.put(COL_STATE, user.getState());
+        db.insert(USER_TABLE_NAME,null,values);
+        db.close();
     }
 
 }
