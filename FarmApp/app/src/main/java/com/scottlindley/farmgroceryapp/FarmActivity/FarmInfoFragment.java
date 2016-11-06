@@ -56,8 +56,8 @@ public class FarmInfoFragment extends Fragment {
 
         photo.setImageResource(selectedFarm.getPhotoID());
         story.setText(selectedFarm.getStory());
-        state.setText(upperCaseState);
-        specialty.setText(selectedFarm.getSpecialty());
+        state.setText("State: "+upperCaseState);
+        specialty.setText("Specialty: "+selectedFarm.getSpecialty());
 
     }
 }

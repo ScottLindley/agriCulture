@@ -11,11 +11,15 @@ public class Food {
     private int mImageID;
     private double mPrice;
     private String mFarmName;
+    private int mQuantity;
+    private double mPriceForOne;
 
     public Food(String name, double price, String farmName) {
         mName = name;
         mPrice = price;
+        mPriceForOne = price;
         mFarmName = farmName;
+        mQuantity = 1;
 
         switch (name){
             case "apples":
@@ -96,6 +100,22 @@ public class Food {
             case "brussel sprouts":
                 mImageID = R.drawable.brussels;
                 break;
+        }
+    }
+
+    public int getQuantity() {
+        return mQuantity;
+    }
+
+    public void incrementQuantity(){
+        mQuantity++;
+        mPrice = mPriceForOne * mQuantity;
+    }
+
+    public void decrementQuantity(){
+        if(mQuantity>0) {
+            mQuantity--;
+            mPrice = mPriceForOne * mQuantity;
         }
     }
 

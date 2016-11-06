@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.scottlindley.farmgroceryapp.CustomObjects.Cart;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
 import com.scottlindley.farmgroceryapp.R;
 
@@ -21,6 +22,7 @@ public class CartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
+    private CartRecyclerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,14 @@ public class CartActivity extends AppCompatActivity
     public void setUpRecyclerView(){
         mRecyclerView = (RecyclerView)findViewById(R.id.cart_recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
+        mAdapter = new CartRecyclerAdapter();
+        mRecyclerView.setAdapter(mAdapter);
+    }
 
+    @Override
+    protected void onResume() {
+        Cart.getInstance().removeZeroQuantities();
+        mAdapter.replaceData();
+        super.onResume();
     }
 }

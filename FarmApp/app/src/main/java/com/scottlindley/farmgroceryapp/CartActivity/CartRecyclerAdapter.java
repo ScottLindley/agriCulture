@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.scottlindley.farmgroceryapp.CustomObjects.Cart;
 import com.scottlindley.farmgroceryapp.CustomObjects.Food;
 import com.scottlindley.farmgroceryapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +22,10 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
 
     List<Food> mItems;
 
+    public CartRecyclerAdapter() {
+        mItems = consolidateDuplicates(Cart.getInstance().getItems());
+    }
+
     @Override
     public CartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -28,16 +34,27 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(CartViewHolder holder, int position) {
+    public void onBindViewHolder(final CartViewHolder holder, final int position) {
         holder.mFoodImage.setImageResource(mItems.get(position).getImageID());
         holder.mFoodName.setText(mItems.get(position).getFarmName()+"\n"+mItems.get(position).getName());
         holder.mFoodPrice.setText("$"+mItems.get(position).getPrice());
-        holder.mQuantity.setText(String.valueOf(getItemQuantity(position)));
+        holder.mQuantity.setText(String.valueOf(mItems.get(position).getQuantity()));
 
         holder.mQuantityUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Cart.getInstance().getItems().get(holder.getAdapterPosition()).incrementQuantity();
+                replaceData();
+                notifyItemChanged(holder.getAdapterPosition());
+            }
+        });
 
+        holder.mQuantityDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Cart.getInstance().getItems().get(holder.getAdapterPosition()).decrementQuantity();
+                replaceData();
+                notifyItemChanged(holder.getAdapterPosition());
             }
         });
     }
@@ -47,16 +64,35 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
         return mItems.size();
     }
 
-    public int getItemQuantity(int position){
-        String foodName = mItems.get(position).getName();
-        int quantity = 0;
-        for(Food f: mItems){
-            if (f.getName().equals(foodName)){
-                quantity++;
+    /*
+    This method takes in a list of food items and looks for any duplicates with the same food
+    name AND the same farm name. It returns a list of food items with adjusted quantities and
+    instead of duplicates.
+     */
+    public List<Food> consolidateDuplicates(List<Food> items){
+        List<Food> newItemList = new ArrayList<>();
+        for (int i=0; i<items.size(); i++) {
+            String itemName = items.get(i).getName();
+            String farmName = items.get(i).getFarmName();
+            boolean isInList = false;
+            for (int j = 0; j < newItemList.size(); j++) {
+                if (newItemList.get(j).getName().equals(itemName)
+                        &&newItemList.get(j).getFarmName().equals(farmName)) {
+                    newItemList.get(j).incrementQuantity();
+                    isInList = true;
+                    break;
+                }
             }
+            if (!isInList) {newItemList.add(items.get(i));}
         }
-        return quantity;
+        return newItemList;
     }
+
+    public void replaceData(){
+        mItems = consolidateDuplicates(Cart.getInstance().getItems());
+        notifyDataSetChanged();
+    }
+
 
     public class CartViewHolder extends RecyclerView.ViewHolder{
         public ImageView mQuantityUp, mQuantityDown, mFoodImage;
