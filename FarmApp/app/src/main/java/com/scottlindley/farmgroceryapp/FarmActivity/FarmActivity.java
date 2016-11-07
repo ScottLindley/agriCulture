@@ -1,6 +1,10 @@
 package com.scottlindley.farmgroceryapp.FarmActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -11,14 +15,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.scottlindley.farmgroceryapp.CartActivity.CartActivity;
+import com.scottlindley.farmgroceryapp.CustomObjects.Like;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListRecyclerAdapter;
 import com.scottlindley.farmgroceryapp.R;
+
+import java.util.List;
 
 import static com.scottlindley.farmgroceryapp.R.id.toolbar;
 
@@ -27,6 +36,8 @@ public class FarmActivity extends AppCompatActivity
 
     private int mSelectedFarmID;
     private Toolbar mToolbar;
+    private MySQLiteHelper mHelper;
+    private int mUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +45,12 @@ public class FarmActivity extends AppCompatActivity
         setContentView(R.layout.activity_farm);
         mToolbar = (Toolbar) findViewById(toolbar);
         setSupportActionBar(mToolbar);
+
+        mHelper = MySQLiteHelper.getInstance(FarmActivity.this);
+
+        SharedPreferences preferences = getSharedPreferences(FarmListActivity.PREFERENCES_KEY, MODE_PRIVATE);
+        mUserID = preferences.getInt(FarmListActivity.DEVICE_USER_ID_KEY, -1);
+        if(mUserID ==-1){finish();}
 
         getReceivedIntent();
 
@@ -108,6 +125,20 @@ public class FarmActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        SharedPreferences preferences = getSharedPreferences(FarmListActivity.PREFERENCES_KEY, MODE_PRIVATE);
+        int DeviceUserID = preferences.getInt(FarmListActivity.DEVICE_USER_ID_KEY, -1);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUserName = (TextView)headerView.findViewById(R.id.nav_user_name);
+        TextView navUserState = (TextView)headerView.findViewById(R.id.nav_user_state);
+
+        if(DeviceUserID!=-1) {
+            navUserName.setText(
+                    mHelper.getUserByID(DeviceUserID).getName());
+            navUserState.setText(
+                    mHelper.getUserByID(DeviceUserID).getState());
+        }
     }
 
     public void setUpViewPagerAndTabs(){
@@ -120,6 +151,35 @@ public class FarmActivity extends AppCompatActivity
     }
 
     public void setToolBarTitle(){
-        setTitle(MySQLiteHelper.getInstance(FarmActivity.this).getFarmByID(mSelectedFarmID).getName());
+        setTitle(mHelper.getFarmByID(mSelectedFarmID).getName());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.farm_toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        List<Like> userLikes = mHelper.getUserLikes(mUserID);
+        boolean farmLiked = false;
+        for (Like like : userLikes){
+            if(like.getFarmID()==mSelectedFarmID){farmLiked=true;}
+        }
+        switch (item.getItemId()){
+            case R.id.favorite_button:
+                if (!farmLiked) {
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_favorite_white_24dp);
+                    drawable.setColorFilter(Color.rgb(183, 28, 28), PorterDuff.Mode.SRC_ATOP);
+                    item.setIcon(drawable);
+                    mHelper.insertLike(new Like(mSelectedFarmID, mUserID));
+                }else{
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp);
+                    item.setIcon(drawable);
+                    mHelper.deleteLike(mHelper.getLike(mSelectedFarmID, mUserID));
+                }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

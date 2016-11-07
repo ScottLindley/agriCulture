@@ -198,7 +198,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         if(cursor.moveToFirst()){
             while(!cursor.isAfterLast()){
                 likes.add(new Like(
-                        cursor.getInt(cursor.getColumnIndex(COL_ID)),
                         cursor.getInt(cursor.getColumnIndex(COL_FARM_ID)),
                         cursor.getInt(cursor.getColumnIndex(COL_USER_ID))));
                 cursor.moveToNext();
@@ -248,6 +247,61 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         values.put(COL_STATE, user.getState());
         db.insert(USER_TABLE_NAME,null,values);
         db.close();
+    }
+
+    public void insertLike(Like like){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_FARM_ID, like.getFarmID());
+        values.put(COL_USER_ID, like.getUserID());
+        db.insert(LIKES_TABLE_NAME,null,values);
+        db.close();
+    }
+
+    public void deleteLike(Like like){
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(LIKES_TABLE_NAME, COL_FARM_ID+" = ? AND "+COL_USER_ID+" = ?",
+                new String[]{COL_FARM_ID,COL_USER_ID});
+    }
+
+    public List<Like> getUserLikes(int userID){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(
+                LIKES_TABLE_NAME, null,
+                COL_USER_ID+" = ?",
+                new String[]{String.valueOf(userID)},
+                null,null,null);
+
+        List<Like> likes = new ArrayList<>();
+        if(cursor.moveToFirst()){
+            while(!cursor.isAfterLast()){
+                likes.add(new Like(
+                        cursor.getInt(cursor.getColumnIndex(COL_FARM_ID)),
+                        cursor.getInt(cursor.getColumnIndex(COL_USER_ID))));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        return likes;
+    }
+
+    public Like getLike(int farmID, int userID){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(
+                LIKES_TABLE_NAME, null,
+                COL_FARM_ID+" = ? AND "+COL_USER_ID+" = ?",
+                new String[]{String.valueOf(farmID), String.valueOf(userID)},
+                null,null,null);
+
+        if(cursor.moveToFirst()){
+                Like like = new Like(
+                        cursor.getInt(cursor.getColumnIndex(COL_FARM_ID)),
+                        cursor.getInt(cursor.getColumnIndex(COL_USER_ID)));
+            cursor.close();
+            return like;
+        }
+        cursor.close();
+        return null;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.scottlindley.farmgroceryapp.CartActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.scottlindley.farmgroceryapp.CustomObjects.Cart;
+import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
 import com.scottlindley.farmgroceryapp.R;
 
@@ -105,6 +107,20 @@ public class CartActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        SharedPreferences preferences = getSharedPreferences(FarmListActivity.PREFERENCES_KEY, MODE_PRIVATE);
+        int DeviceUserID = preferences.getInt(FarmListActivity.DEVICE_USER_ID_KEY, -1);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUserName = (TextView)headerView.findViewById(R.id.nav_user_name);
+        TextView navUserState = (TextView)headerView.findViewById(R.id.nav_user_state);
+
+        if(DeviceUserID!=-1) {
+            navUserName.setText(
+                    MySQLiteHelper.getInstance(CartActivity.this).getUserByID(DeviceUserID).getName());
+            navUserState.setText(
+                    MySQLiteHelper.getInstance(CartActivity.this).getUserByID(DeviceUserID).getState());
+        }
     }
 
     public void setUpRecyclerView(){

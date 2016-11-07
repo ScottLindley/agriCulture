@@ -5,18 +5,16 @@ package com.scottlindley.farmgroceryapp.CustomObjects;
  */
 
 public class Like {
-    private int mID;
     private int mFarmID;
     private int mUserID;
 
-    public Like(int ID, int farmID, int userID) {
-        mID = ID;
+    public Like(int farmID, int userID) {
         mFarmID = farmID;
         mUserID = userID;
     }
 
-    public int getID() {
-        return mID;
+    public int getFarmID() {
+        return mFarmID;
     }
 
     public int getUserID() {
