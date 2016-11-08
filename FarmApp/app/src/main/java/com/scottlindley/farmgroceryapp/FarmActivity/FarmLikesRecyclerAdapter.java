@@ -35,7 +35,6 @@ public class FarmLikesRecyclerAdapter extends RecyclerView.Adapter<FarmLikesRecy
 
     @Override
     public void onBindViewHolder(LikesViewHolder holder, int position) {
-        //TODO: FIX MUST USE A JOIN METHOD
         holder.mUserName.setText(MySQLiteHelper.getInstance(mContext).getUserByID(mLikes.get(position).getUserID()).getName());
         holder.mUserState.setText(MySQLiteHelper.getInstance(mContext).getUserByID(mLikes.get(position).getUserID()).getState());
     }

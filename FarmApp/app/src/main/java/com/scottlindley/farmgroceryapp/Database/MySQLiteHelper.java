@@ -94,17 +94,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(
                 FARMS_TABLE_NAME,
-                null,null,null,null,null,null);
+                new String[]{COL_NAME, COL_STATE},null,null,null,null,null);
 
         List<Farm> allFarms = new ArrayList<>();
 
         if(cursor.moveToFirst()){
             while(!cursor.isAfterLast()){
                 allFarms.add(new Farm(
-                        cursor.getInt(cursor.getColumnIndex(COL_ID)),
+                        1,
                         cursor.getString(cursor.getColumnIndex(COL_NAME)),
-                        cursor.getString(cursor.getColumnIndex(COL_STORY)),
-                        cursor.getString(cursor.getColumnIndex(COL_SPECIALTY)),
+                        "","",
                         cursor.getString(cursor.getColumnIndex(COL_STATE))));
                 cursor.moveToNext();
             }

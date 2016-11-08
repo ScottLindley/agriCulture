@@ -25,6 +25,7 @@ import com.scottlindley.farmgroceryapp.CustomObjects.Like;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListRecyclerAdapter;
+import com.scottlindley.farmgroceryapp.LikedFarmsActivity.LikedFarmsActivity;
 import com.scottlindley.farmgroceryapp.R;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public class FarmActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_like) {
-
+            startActivity(new Intent(this, LikedFarmsActivity.class));
         } else if (id == R.id.nav_cart) {
             startActivity(new Intent(FarmActivity.this, CartActivity.class));
         } else if (id == R.id.nav_order_history) {
@@ -89,8 +90,7 @@ public class FarmActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_farm_list){
-            Intent intent = new Intent(this, FarmListActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, FarmListActivity.class));
         }
 
 

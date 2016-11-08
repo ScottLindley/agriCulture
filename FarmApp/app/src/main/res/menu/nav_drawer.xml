@@ -8,7 +8,7 @@
             android:title="Farms"/>
         <item
             android:id="@+id/nav_like"
-            android:icon="@drawable/ic_favorite_white_24dp"
+            android:icon="@drawable/ic_favorite_border_white_24dp"
             android:title="Liked Farms"/>
         <item
             android:id="@+id/nav_cart"

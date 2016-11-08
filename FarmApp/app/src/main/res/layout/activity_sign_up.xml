@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.scottlindley.farmgroceryapp.SignUpActivity">
+    tools:context="com.scottlindley.farmgroceryapp.SignUpActivity.SignUpActivity">
 
     <Button
         android:id="@+id/sign_up_button"

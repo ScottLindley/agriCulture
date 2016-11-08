@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.scottlindley.farmgroceryapp.CustomObjects.Cart;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
+import com.scottlindley.farmgroceryapp.LikedFarmsActivity.LikedFarmsActivity;
 import com.scottlindley.farmgroceryapp.R;
 
 import static com.scottlindley.farmgroceryapp.R.id.toolbar;
@@ -80,7 +81,7 @@ public class CartActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_like) {
-
+            startActivity(new Intent(this, LikedFarmsActivity.class));
         } else if (id == R.id.nav_cart) {
 
         } else if (id == R.id.nav_order_history) {
@@ -88,8 +89,7 @@ public class CartActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_farm_list){
-            Intent intent = new Intent(this, FarmListActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, FarmListActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

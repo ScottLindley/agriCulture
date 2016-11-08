@@ -1,4 +1,4 @@
-package com.scottlindley.farmgroceryapp;
+package com.scottlindley.farmgroceryapp.SignUpActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.scottlindley.farmgroceryapp.CustomObjects.User;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
+import com.scottlindley.farmgroceryapp.R;
 
 public class SignUpActivity extends AppCompatActivity {
     private Button mButton;

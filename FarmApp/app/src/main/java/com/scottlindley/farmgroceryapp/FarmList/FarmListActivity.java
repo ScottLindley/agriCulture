@@ -25,8 +25,9 @@ import com.scottlindley.farmgroceryapp.CartActivity.CartActivity;
 import com.scottlindley.farmgroceryapp.CustomObjects.Farm;
 import com.scottlindley.farmgroceryapp.Database.DBAssetsHelper;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
+import com.scottlindley.farmgroceryapp.LikedFarmsActivity.LikedFarmsActivity;
 import com.scottlindley.farmgroceryapp.R;
-import com.scottlindley.farmgroceryapp.SignUpActivity;
+import com.scottlindley.farmgroceryapp.SignUpActivity.SignUpActivity;
 
 import java.util.List;
 
@@ -106,7 +107,7 @@ public class FarmListActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_like) {
-
+            startActivity(new Intent(this, LikedFarmsActivity.class));
         } else if (id == R.id.nav_cart) {
             startActivity(new Intent(FarmListActivity.this, CartActivity.class));
 

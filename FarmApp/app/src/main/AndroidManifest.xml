@@ -35,7 +35,12 @@
             android:label="@string/title_activity_cart"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".SignUpActivity">
+        <activity android:name=".SignUpActivity.SignUpActivity">
+        </activity>
+        <activity
+            android:name=".LikedFarmsActivity.LikedFarmsActivity"
+            android:label="@string/title_activity_liked_farms"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

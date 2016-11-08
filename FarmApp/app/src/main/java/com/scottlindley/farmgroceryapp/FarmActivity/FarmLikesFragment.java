@@ -33,7 +33,7 @@ public class FarmLikesFragment extends Fragment implements FarmActivity.OnLikeBu
     @Override
     public void onLikeButtonClicked(int farmID) {
         mAdapter.replaceData(MySQLiteHelper.getInstance(mContext).getLikes(farmID));
-        mRecyclerView.smoothScrollToPosition(mLikes.size()+1);
+        mRecyclerView.smoothScrollToPosition(mLikes.size());
     }
 
     @Override
@@ -61,7 +61,7 @@ public class FarmLikesFragment extends Fragment implements FarmActivity.OnLikeBu
         mLikes = MySQLiteHelper.getInstance(mContext).getLikes(mSelectedFarm.getID());
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.likes_recycler);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,true));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mAdapter = new FarmLikesRecyclerAdapter(mContext, mLikes);
         mRecyclerView.setAdapter(mAdapter);
     }
