@@ -19,9 +19,10 @@ import android.widget.TextView;
 import com.scottlindley.farmgroceryapp.CartActivity.CartActivity;
 import com.scottlindley.farmgroceryapp.CustomObjects.Like;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
-import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
+import com.scottlindley.farmgroceryapp.FarmListActivity.FarmListActivity;
 import com.scottlindley.farmgroceryapp.OrderHistoryActivity.OrderHistoryActivity;
 import com.scottlindley.farmgroceryapp.R;
+import com.scottlindley.farmgroceryapp.SettingsActivity.SettingsActivity;
 
 import java.util.List;
 
@@ -76,7 +77,7 @@ public class LikedFarmsActivity extends AppCompatActivity
         } else if (id == R.id.nav_order_history) {
             startActivity(new Intent(this, OrderHistoryActivity.class));
         } else if (id == R.id.nav_settings) {
-
+            startActivity(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.nav_farm_list){
             startActivity(new Intent(this, FarmListActivity.class));
         }

@@ -21,10 +21,11 @@ import com.scottlindley.farmgroceryapp.CustomObjects.Cart;
 import com.scottlindley.farmgroceryapp.CustomObjects.Food;
 import com.scottlindley.farmgroceryapp.CustomObjects.Order;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
-import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
+import com.scottlindley.farmgroceryapp.FarmListActivity.FarmListActivity;
 import com.scottlindley.farmgroceryapp.LikedFarmsActivity.LikedFarmsActivity;
 import com.scottlindley.farmgroceryapp.OrderHistoryActivity.OrderHistoryActivity;
 import com.scottlindley.farmgroceryapp.R;
+import com.scottlindley.farmgroceryapp.SettingsActivity.SettingsActivity;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -95,12 +96,10 @@ public class CartActivity extends AppCompatActivity
 
         if (id == R.id.nav_like) {
             startActivity(new Intent(this, LikedFarmsActivity.class));
-        } else if (id == R.id.nav_cart) {
-
         } else if (id == R.id.nav_order_history) {
             startActivity(new Intent(this, OrderHistoryActivity.class));
         } else if (id == R.id.nav_settings) {
-
+            startActivity(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.nav_farm_list){
             startActivity(new Intent(this, FarmListActivity.class));
         }

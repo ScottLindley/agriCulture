@@ -1,4 +1,4 @@
-package com.scottlindley.farmgroceryapp.FarmList;
+package com.scottlindley.farmgroceryapp.FarmListActivity;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;

@@ -1,4 +1,4 @@
-package com.scottlindley.farmgroceryapp.OrderHistoryActivity;
+package com.scottlindley.farmgroceryapp.SettingsActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,45 +8,31 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.scottlindley.farmgroceryapp.CartActivity.CartActivity;
-import com.scottlindley.farmgroceryapp.CustomObjects.Order;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.FarmListActivity.FarmListActivity;
 import com.scottlindley.farmgroceryapp.LikedFarmsActivity.LikedFarmsActivity;
+import com.scottlindley.farmgroceryapp.OrderHistoryActivity.OrderHistoryActivity;
 import com.scottlindley.farmgroceryapp.R;
-import com.scottlindley.farmgroceryapp.SettingsActivity.SettingsActivity;
 
-import java.util.List;
-
-public class OrderHistoryActivity extends AppCompatActivity
+public class SettingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private RecyclerView mRecyclerView;
-    private OrderHistoryRecyclerAdapter mAdapter;
     private Toolbar mToolbar;
-    private List<Order> mOrders;
-    private int mUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_history);
+        setContentView(R.layout.activity_settings);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        SharedPreferences preferences = getSharedPreferences(FarmListActivity.PREFERENCES_KEY, MODE_PRIVATE);
-        mUserID = preferences.getInt(FarmListActivity.DEVICE_USER_ID_KEY, -1);
-        if(mUserID ==-1){finish();}
 
         setUpNavBar();
-
-        setUpRecycler();
     }
 
     @Override
@@ -60,7 +46,6 @@ public class OrderHistoryActivity extends AppCompatActivity
     }
 
 
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -69,10 +54,10 @@ public class OrderHistoryActivity extends AppCompatActivity
         if (id == R.id.nav_like) {
             startActivity(new Intent(this, LikedFarmsActivity.class));
         } else if (id == R.id.nav_cart) {
-            startActivity(new Intent(OrderHistoryActivity.this, CartActivity.class));
-        } else if (id == R.id.nav_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-        } else if (id == R.id.nav_farm_list){
+            startActivity(new Intent(this, CartActivity.class));
+        } else if (id == R.id.nav_order_history) {
+            startActivity(new Intent(this, OrderHistoryActivity.class));
+        }else if (id == R.id.nav_farm_list){
             startActivity(new Intent(this, FarmListActivity.class));
         }
 
@@ -100,18 +85,9 @@ public class OrderHistoryActivity extends AppCompatActivity
 
         if(DeviceUserID!=-1) {
             navUserName.setText(
-                    MySQLiteHelper.getInstance(OrderHistoryActivity.this).getUserByID(DeviceUserID).getName());
+                    MySQLiteHelper.getInstance(SettingsActivity.this).getUserByID(DeviceUserID).getName());
             navUserState.setText(
-                    MySQLiteHelper.getInstance(OrderHistoryActivity.this).getUserByID(DeviceUserID).getState());
+                    MySQLiteHelper.getInstance(SettingsActivity.this).getUserByID(DeviceUserID).getState());
         }
-    }
-
-    public void setUpRecycler(){
-        mOrders = MySQLiteHelper.getInstance(OrderHistoryActivity.this).getOrdersByUserID(mUserID);
-
-        mRecyclerView = (RecyclerView)findViewById(R.id.order_history_recycler);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(OrderHistoryActivity.this));
-        mAdapter = new OrderHistoryRecyclerAdapter(mOrders, OrderHistoryActivity.this);
-        mRecyclerView.setAdapter(mAdapter);
     }
 }

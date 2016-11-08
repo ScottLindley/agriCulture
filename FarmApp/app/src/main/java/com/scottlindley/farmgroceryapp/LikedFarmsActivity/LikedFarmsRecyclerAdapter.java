@@ -14,7 +14,7 @@ import com.scottlindley.farmgroceryapp.CustomObjects.Farm;
 import com.scottlindley.farmgroceryapp.CustomObjects.Like;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.FarmActivity.FarmActivity;
-import com.scottlindley.farmgroceryapp.FarmList.FarmListRecyclerAdapter;
+import com.scottlindley.farmgroceryapp.FarmListActivity.FarmListRecyclerAdapter;
 import com.scottlindley.farmgroceryapp.R;
 
 import java.util.List;

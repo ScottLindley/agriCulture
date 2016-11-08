@@ -1,4 +1,4 @@
-package com.scottlindley.farmgroceryapp.FarmList;
+package com.scottlindley.farmgroceryapp.FarmListActivity;
 
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -16,7 +16,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +30,7 @@ import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.LikedFarmsActivity.LikedFarmsActivity;
 import com.scottlindley.farmgroceryapp.OrderHistoryActivity.OrderHistoryActivity;
 import com.scottlindley.farmgroceryapp.R;
+import com.scottlindley.farmgroceryapp.SettingsActivity.SettingsActivity;
 import com.scottlindley.farmgroceryapp.SignUpActivity.SignUpActivity;
 
 import java.util.List;
@@ -116,13 +116,10 @@ public class FarmListActivity extends AppCompatActivity
             startActivity(new Intent(this, LikedFarmsActivity.class));
         } else if (id == R.id.nav_cart) {
             startActivity(new Intent(this, CartActivity.class));
-
         } else if (id == R.id.nav_order_history) {
             startActivity(new Intent(this, OrderHistoryActivity.class));
         } else if (id == R.id.nav_settings) {
-
-        } else if (id == R.id.nav_farm_list){
-
+            startActivity(new Intent(this, SettingsActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
