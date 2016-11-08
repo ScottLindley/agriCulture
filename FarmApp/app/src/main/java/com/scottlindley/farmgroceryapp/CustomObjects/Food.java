@@ -19,7 +19,7 @@ public class Food {
         mPrice = price;
         mPriceForOne = price;
         mFarmName = farmName;
-        mQuantity = 1;
+        mQuantity = 0;
 
         switch (name){
             case "apples":

@@ -38,6 +38,8 @@ public class FarmActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private MySQLiteHelper mHelper;
     private int mUserID;
+    private OnLikeButtonListener mListener;
+    private FarmPagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,11 +145,15 @@ public class FarmActivity extends AppCompatActivity
 
     public void setUpViewPagerAndTabs(){
         ViewPager viewPager = (ViewPager)findViewById(R.id.view_pager);
-        FarmPagerAdapter pagerAdapter = new FarmPagerAdapter(getSupportFragmentManager(), mSelectedFarmID);
-        viewPager.setAdapter(pagerAdapter);
+        mPagerAdapter = new FarmPagerAdapter(getSupportFragmentManager(), mSelectedFarmID);
+        viewPager.setAdapter(mPagerAdapter);
+
+        mListener = (FarmLikesFragment) mPagerAdapter.getItem(2);
 
         TabLayout tabLayout = (TabLayout)findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+
+
     }
 
     public void setToolBarTitle(){
@@ -157,6 +163,20 @@ public class FarmActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.farm_toolbar_menu, menu);
+        List<Like> userLikes = mHelper.getUserLikes(mUserID);
+        boolean farmLiked = false;
+        for (Like like : userLikes){
+            if(like.getFarmID()==mSelectedFarmID){farmLiked=true;}
+        }
+
+        if(farmLiked){
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_favorite_white_24dp);
+            drawable.setColorFilter(Color.rgb(183, 28, 28), PorterDuff.Mode.SRC_ATOP);
+            menu.findItem(R.id.favorite_button).setIcon(drawable);
+        }else{
+            menu.findItem(R.id.favorite_button)
+                    .setIcon(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
+        }
         return true;
     }
 
@@ -169,6 +189,7 @@ public class FarmActivity extends AppCompatActivity
         }
         switch (item.getItemId()){
             case R.id.favorite_button:
+
                 if (!farmLiked) {
                     Drawable drawable = getResources().getDrawable(R.drawable.ic_favorite_white_24dp);
                     drawable.setColorFilter(Color.rgb(183, 28, 28), PorterDuff.Mode.SRC_ATOP);
@@ -179,7 +200,21 @@ public class FarmActivity extends AppCompatActivity
                     item.setIcon(drawable);
                     mHelper.deleteLike(mHelper.getLike(mSelectedFarmID, mUserID));
                 }
+
+                mPagerAdapter.notifyDataSetChanged();
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public interface OnLikeButtonListener{
+        void onLikeButtonClicked(int farmID);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mPagerAdapter.notifyDataSetChanged();
     }
 }

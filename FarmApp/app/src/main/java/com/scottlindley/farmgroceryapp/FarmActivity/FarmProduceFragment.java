@@ -24,6 +24,7 @@ import java.util.List;
 public class FarmProduceFragment extends Fragment {
     private Farm mSelectedFarm;
     private RecyclerView mRecyclerView;
+    private FarmProduceRecyclerAdapter mAdapter;
     private Context mContext;
 
     @Nullable
@@ -53,6 +54,18 @@ public class FarmProduceFragment extends Fragment {
 
         List<Food> foods = MySQLiteHelper.getInstance(mContext).getFoodByFarm(mSelectedFarm.getID());
 
-        mRecyclerView.setAdapter(new FarmProduceRecyclerViewAdapter(foods));
+        mAdapter = new FarmProduceRecyclerAdapter(foods, mContext);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.refreshData(MySQLiteHelper.getInstance(mContext).getFoodByFarm(mSelectedFarm.getID()));
+
+    }
+
+    public FarmProduceRecyclerAdapter getAdapter(){
+        return mAdapter;
     }
 }

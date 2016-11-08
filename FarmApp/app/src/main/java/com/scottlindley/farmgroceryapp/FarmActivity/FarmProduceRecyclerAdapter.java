@@ -1,5 +1,6 @@
 package com.scottlindley.farmgroceryapp.FarmActivity;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +19,13 @@ import java.util.List;
  * Created by Scott Lindley on 11/4/2016.
  */
 
-public class FarmProduceRecyclerViewAdapter extends RecyclerView.Adapter<FarmProduceRecyclerViewAdapter.ProduceViewHolder>{
+public class FarmProduceRecyclerAdapter extends RecyclerView.Adapter<FarmProduceRecyclerAdapter.ProduceViewHolder>{
     private List<Food> mFoods;
+    private Context mContext;
 
-    public FarmProduceRecyclerViewAdapter(List<Food> foods) {
+    public FarmProduceRecyclerAdapter(List<Food> foods, Context context) {
         mFoods = foods;
+        mContext = context;
     }
 
     @Override
@@ -38,17 +41,34 @@ public class FarmProduceRecyclerViewAdapter extends RecyclerView.Adapter<FarmPro
         holder.mFoodName.setText(mFoods.get(position).getName());
         holder.mFoodPrice.setText("$"+Double.toString(mFoods.get(position).getPrice()));
 
-        holder.mAddToCartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mFoods.get(position).getQuantity()==0){
-                    mFoods.get(position).incrementQuantity();
-                }
-                Cart.getInstance().getItems().add(mFoods.get(position));
-                Toast.makeText(view.getContext(), mFoods.get(position).getName()+
-                        " added to cart", Toast.LENGTH_SHORT).show();
+        boolean isInCart = false;
+        for (Food f: Cart.getInstance().getItems()){
+            if (f.getName().equals(mFoods.get(position).getName())
+                && f.getFarmName().equals(mFoods.get(position).getFarmName())){
+                isInCart = true;
             }
-        });
+        }
+        if(isInCart){
+            holder.mAddToCartButton.setAlpha(0.35f);
+            holder.mAddToCartButton.setClickable(false);
+        }else {
+            holder.mAddToCartButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mFoods.get(position).getQuantity() == 0) {
+                        mFoods.get(position).incrementQuantity();
+                    }
+                    if (!Cart.getInstance().getItems().contains(mFoods.get(position))) {
+                        mFoods.get(position).setQuantity(1);
+                        Cart.getInstance().getItems().add(mFoods.get(position));
+                        Toast.makeText(view.getContext(), mFoods.get(position).getName() +
+                                " added to cart", Toast.LENGTH_SHORT).show();
+                        view.setAlpha(0.35f);
+                        view.setClickable(false);
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -66,5 +86,10 @@ public class FarmProduceRecyclerViewAdapter extends RecyclerView.Adapter<FarmPro
             mFoodPhoto = (ImageView) itemView.findViewById(R.id.food_image);
             mAddToCartButton = (ImageView) itemView.findViewById(R.id.add_to_cart);
         }
+    }
+
+    public void refreshData(List<Food> foods){
+        mFoods = foods;
+        notifyDataSetChanged();
     }
 }

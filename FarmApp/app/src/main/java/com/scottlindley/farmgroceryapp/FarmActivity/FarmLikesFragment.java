@@ -21,13 +21,21 @@ import java.util.List;
  * Created by Scott Lindley on 11/4/2016.
  */
 
-public class FarmLikesFragment extends Fragment {
+public class FarmLikesFragment extends Fragment implements FarmActivity.OnLikeButtonListener{
     private Farm mSelectedFarm;
+    private int mFarmID;
     private List<Like> mLikes;
     private RecyclerView mRecyclerView;
+    private FarmLikesRecyclerAdapter mAdapter;
     private Context mContext;
 
-    @Nullable
+
+    @Override
+    public void onLikeButtonClicked(int farmID) {
+        mAdapter.replaceData(MySQLiteHelper.getInstance(mContext).getLikes(farmID));
+        mRecyclerView.smoothScrollToPosition(mLikes.size()+1);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext = container.getContext();
@@ -46,14 +54,19 @@ public class FarmLikesFragment extends Fragment {
 
         Bundle bundle = getArguments();
 
-        int farmID = bundle.getInt(FarmPagerAdapter.PAGER_ADAPTER_FARM_ID);
+        mFarmID = bundle.getInt(FarmPagerAdapter.PAGER_ADAPTER_FARM_ID);
 
-        mSelectedFarm = MySQLiteHelper.getInstance(view.getContext()).getFarmByID(farmID);
+        mSelectedFarm = MySQLiteHelper.getInstance(view.getContext()).getFarmByID(mFarmID);
 
         mLikes = MySQLiteHelper.getInstance(mContext).getLikes(mSelectedFarm.getID());
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.likes_recycler);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mRecyclerView.setAdapter(new FarmLikesRecyclerAdapter(mContext, mLikes));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,true));
+        mAdapter = new FarmLikesRecyclerAdapter(mContext, mLikes);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public FarmActivity.OnLikeButtonListener getRecyclerListener(){
+        return (FarmActivity.OnLikeButtonListener)mRecyclerView;
     }
 }

@@ -261,7 +261,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     public void deleteLike(Like like){
         SQLiteDatabase db = getWritableDatabase();
         db.delete(LIKES_TABLE_NAME, COL_FARM_ID+" = ? AND "+COL_USER_ID+" = ?",
-                new String[]{COL_FARM_ID,COL_USER_ID});
+                new String[]{String.valueOf(like.getFarmID()),String.valueOf(like.getUserID())});
+        db.close();
     }
 
     public List<Like> getUserLikes(int userID){

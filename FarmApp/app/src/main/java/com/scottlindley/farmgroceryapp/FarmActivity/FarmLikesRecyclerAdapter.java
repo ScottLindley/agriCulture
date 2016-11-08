@@ -45,6 +45,11 @@ public class FarmLikesRecyclerAdapter extends RecyclerView.Adapter<FarmLikesRecy
         return mLikes.size();
     }
 
+    public void replaceData(List<Like> likes){
+        mLikes = likes;
+        notifyDataSetChanged();
+    }
+
     public class LikesViewHolder extends RecyclerView.ViewHolder{
         public TextView mUserName, mUserState;
         public LikesViewHolder(View itemView) {

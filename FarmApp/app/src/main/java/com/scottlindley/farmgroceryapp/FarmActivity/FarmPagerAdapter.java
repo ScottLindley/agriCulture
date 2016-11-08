@@ -12,18 +12,20 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class FarmPagerAdapter extends FragmentPagerAdapter {
     private int mFarmID;
     private Bundle mBundle;
+
     public static final String PAGER_ADAPTER_FARM_ID = "pager_farm_id";
     public FarmPagerAdapter(FragmentManager fm, int farmID) {
         super(fm);
         mFarmID = farmID;
         mBundle = new Bundle();
         mBundle.putInt(PAGER_ADAPTER_FARM_ID, mFarmID);
+
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position){
-            case 0: return FarmInfoFragment.newInstance(mBundle);
+            case 0:return FarmInfoFragment.newInstance(mBundle);
             case 1: return FarmProduceFragment.newInstance(mBundle);
             case 2: return FarmLikesFragment.newInstance(mBundle);
             default: return null;
@@ -44,4 +46,18 @@ public class FarmPagerAdapter extends FragmentPagerAdapter {
             default: return null;
         }
     }
+
+    @Override
+    public int getItemPosition(Object object) {
+        if(object instanceof FarmActivity.OnLikeButtonListener){
+            ((FarmActivity.OnLikeButtonListener)object).onLikeButtonClicked(mFarmID);
+//            return POSITION_NONE;
+        }
+        if(object instanceof FarmProduceFragment){
+            ((FarmProduceFragment)object).getAdapter().notifyDataSetChanged();
+        }
+        return super.getItemPosition(object);
+    }
+
+
 }
