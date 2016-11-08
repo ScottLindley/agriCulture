@@ -408,6 +408,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         return orders;
     }
 
+    public void upDateUserInfo(int userID, User user){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_NAME, user.getName());
+        values.put(COL_STATE, user.getState());
+        db.update(USER_TABLE_NAME, values, COL_ID+" = ?", new String[]{String.valueOf(userID)});
+    }
+
 
 
 }

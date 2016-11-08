@@ -11,18 +11,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.scottlindley.farmgroceryapp.CartActivity.CartActivity;
+import com.scottlindley.farmgroceryapp.CustomObjects.User;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.FarmListActivity.FarmListActivity;
 import com.scottlindley.farmgroceryapp.LikedFarmsActivity.LikedFarmsActivity;
 import com.scottlindley.farmgroceryapp.OrderHistoryActivity.OrderHistoryActivity;
 import com.scottlindley.farmgroceryapp.R;
 
+
 public class SettingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar mToolbar;
+    private EditText mNameEdit, mStateEdit;
+    private TextView mButtonText;
+    private int mUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +38,13 @@ public class SettingsActivity extends AppCompatActivity
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
+        SharedPreferences preferences = getSharedPreferences(FarmListActivity.PREFERENCES_KEY, MODE_PRIVATE);
+        mUserID = preferences.getInt(FarmListActivity.DEVICE_USER_ID_KEY, -1);
+        if(mUserID ==-1){finish();}
 
         setUpNavBar();
+
+        setUpViews();
     }
 
     @Override
@@ -48,7 +60,6 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_like) {
@@ -89,5 +100,49 @@ public class SettingsActivity extends AppCompatActivity
             navUserState.setText(
                     MySQLiteHelper.getInstance(SettingsActivity.this).getUserByID(DeviceUserID).getState());
         }
+    }
+
+    public void setUpViews(){
+        mNameEdit = (EditText)findViewById(R.id.user_name_edit);
+        mStateEdit = (EditText)findViewById(R.id.user_state_edit);
+        mButtonText = (TextView) findViewById(R.id.edit_profile_text);
+
+        mButtonText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mNameEdit.setVisibility(View.VISIBLE);
+                mStateEdit.setVisibility(View.VISIBLE);
+                mButtonText.setText("Okay");
+                mButtonText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!mNameEdit.getText().toString().equals("")
+                                && !mStateEdit.getText().toString().equals("")) {
+                            User user = new User(
+                                    mNameEdit.getText().toString(),
+                                    mStateEdit.getText().toString());
+                            MySQLiteHelper.getInstance(SettingsActivity.this).upDateUserInfo(mUserID, user);
+                            SharedPreferences preferences = getSharedPreferences(
+                                    FarmListActivity.PREFERENCES_KEY, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putInt(FarmListActivity.DEVICE_USER_ID_KEY,
+                                    MySQLiteHelper.getInstance(SettingsActivity.this).getLastUser().getID());
+                            editor.commit();
+                            Toast.makeText(SettingsActivity.this, "Changes Saved", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            if (mNameEdit.getText().toString().equals("")
+                                    && !mStateEdit.getText().toString().equals("")) {
+                                mNameEdit.setError("Name cannot be blank");
+                            } else if (!mNameEdit.getText().toString().equals("")
+                                    && mStateEdit.getText().toString().equals("")) {
+                                mStateEdit.setError("State cannot be blank");
+                            }
+                        }
+
+                    }
+                });
+            }
+        });
     }
 }
