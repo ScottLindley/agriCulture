@@ -42,6 +42,11 @@
             android:label="@string/title_activity_liked_farms"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".OrderHistoryActivity.OrderHistoryActivity"
+            android:label="@string/title_activity_order_history"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

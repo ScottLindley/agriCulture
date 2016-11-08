@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.scottlindley.farmgroceryapp.CustomObjects.Farm;
 import com.scottlindley.farmgroceryapp.CustomObjects.Food;
 import com.scottlindley.farmgroceryapp.CustomObjects.Like;
+import com.scottlindley.farmgroceryapp.CustomObjects.Order;
 import com.scottlindley.farmgroceryapp.CustomObjects.User;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     public static final String LIKES_TABLE_NAME = "Likes";
     public static final String FOODS_TABLE_NAME = "Foods";
     public static final String FARMS_TABLE_NAME = "Farms";
+    public static final String ORDERS_TABLE_NAME = "Order_History";
+    public static final String CART_TABLE_NAME = "Cart";
 
     public static final String COL_ID = "ID";
     public static final String COL_NAME = "Name";
@@ -35,6 +38,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     public static final String COL_PRICE = "Price";
     public static final String COL_FARM_ID = "FarmID";
     public static final String COL_USER_ID = "UserID";
+    public static final String COL_DATE = "Date";
+    public static final String COL_FOOD_NAME = "Food_Name";
+    public static final String COL_QUANTITY = "Quantity";
 
     public static final String CREATE_USER_TABLE =
             "CREATE TABLE "+USER_TABLE_NAME+" ("+
@@ -84,9 +90,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+USER_TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+USER_TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+USER_TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+USER_TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+FARMS_TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+FOODS_TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+LIKES_TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+ORDERS_TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+CART_TABLE_NAME);
         this.onCreate(sqLiteDatabase);
     }
 
@@ -94,16 +102,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(
                 FARMS_TABLE_NAME,
-                new String[]{COL_NAME, COL_STATE},null,null,null,null,null);
+                null,null,null,null,null,null);
 
         List<Farm> allFarms = new ArrayList<>();
 
         if(cursor.moveToFirst()){
             while(!cursor.isAfterLast()){
                 allFarms.add(new Farm(
-                        1,
+                        cursor.getInt(cursor.getColumnIndex(COL_ID)),
                         cursor.getString(cursor.getColumnIndex(COL_NAME)),
-                        "","",
+                        cursor.getString(cursor.getColumnIndex(COL_STORY)),
+                        cursor.getString(cursor.getColumnIndex(COL_SPECIALTY)),
                         cursor.getString(cursor.getColumnIndex(COL_STATE))));
                 cursor.moveToNext();
             }
@@ -176,7 +185,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                 foods.add(new Food(
                         cursor.getString(cursor.getColumnIndex(COL_NAME)),
                         cursor.getDouble(cursor.getColumnIndex(COL_PRICE)),
-                        farm.getName()));
+                        farm));
                 cursor.moveToNext();
             }
         }
@@ -248,12 +257,85 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         db.close();
     }
 
+    public void insertOrder(Order order){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_PRICE, order.getOrderPrice());
+        values.put(COL_DATE, order.getOrderDate());
+        values.put(COL_USER_ID, order.getUserID());
+        db.insert(ORDERS_TABLE_NAME,null,values);
+        db.close();
+    }
+
     public void insertLike(Like like){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COL_FARM_ID, like.getFarmID());
         values.put(COL_USER_ID, like.getUserID());
         db.insert(LIKES_TABLE_NAME,null,values);
+        db.close();
+    }
+
+    public void insertCartItem(Food food, int userID){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_USER_ID, userID);
+        values.put(COL_FARM_ID, food.getFarmID());
+        values.put(COL_FOOD_NAME, food.getName());
+        values.put(COL_QUANTITY, food.getQuantity());
+        db.insert(CART_TABLE_NAME,null,values);
+        db.close();
+    }
+
+    public Food getFoodByNameAndFarm(String foodName, int farmID){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(
+                FOODS_TABLE_NAME, null,
+                COL_NAME+" = ? AND "+COL_FARM_ID+" = ?",
+                new String[]{foodName, String.valueOf(farmID)},
+                null,null,null);
+        if(cursor.moveToFirst()) {
+            Food food = new Food(
+                    cursor.getString(cursor.getColumnIndex(COL_NAME)),
+                    cursor.getDouble(cursor.getColumnIndex(COL_PRICE)),
+                    getFarmByID(cursor.getInt(cursor.getColumnIndex(COL_FARM_ID))));
+            cursor.close();
+            return food;
+        }
+        cursor.close();
+        return null;
+    }
+
+    public List<Food> getCartItemsByUserID(int userID){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(
+                CART_TABLE_NAME, null,
+                COL_USER_ID+" = ?",
+                new String[]{String.valueOf(userID)},
+                null,null,null);
+
+        List<Food> items = new ArrayList<>();
+        if(cursor.moveToFirst()){
+            while(!cursor.isAfterLast()){
+                items.add(new Food(
+                        cursor.getString(cursor.getColumnIndex(COL_FOOD_NAME)),
+                        getFoodByNameAndFarm(
+                                cursor.getString(cursor.getColumnIndex(COL_FOOD_NAME)),
+                                cursor.getInt(cursor.getColumnIndex(COL_FARM_ID)))
+                                .getPrice(),
+                        getFarmByID(cursor.getInt(cursor.getColumnIndex(COL_FARM_ID))),
+                        cursor.getInt(cursor.getColumnIndex(COL_QUANTITY))));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        return items;
+    }
+
+    public void deleteCartItemsByUserID(int userID){
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(CART_TABLE_NAME, COL_USER_ID+" = ?",
+                new String[]{String.valueOf(userID)});
         db.close();
     }
 
@@ -303,5 +385,29 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         cursor.close();
         return null;
     }
+
+    public List<Order> getOrdersByUserID(int userID){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(
+                ORDERS_TABLE_NAME, null,
+                COL_USER_ID+" = ?",
+                new String[]{String.valueOf(userID)},
+                null,null,null);
+
+        List<Order> orders = new ArrayList<>();
+        if(cursor.moveToFirst()){
+            while(!cursor.isAfterLast()){
+                orders.add(new Order(
+                        cursor.getDouble(cursor.getColumnIndex(COL_PRICE)),
+                        cursor.getString(cursor.getColumnIndex(COL_DATE)),
+                        cursor.getInt(cursor.getColumnIndex(COL_USER_ID))));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        return orders;
+    }
+
+
 
 }

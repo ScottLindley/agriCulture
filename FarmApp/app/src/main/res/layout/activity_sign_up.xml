@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_sign_up"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,14 +12,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.scottlindley.farmgroceryapp.SignUpActivity.SignUpActivity">
 
-    <Button
+    <android.support.v7.widget.CardView
         android:id="@+id/sign_up_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="sign up"
-        android:textColor="#eee"
-        android:backgroundTint="@color/colorAccent"/>
+        app:cardCornerRadius="24dp"
+        android:backgroundTint="@color/colorAccent">
+        <TextView
+            android:id="@+id/button_text"
+            android:text="sign up"
+            android:textSize="18sp"
+            android:layout_margin="16dp"
+            android:textColor="#eee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        </android.support.v7.widget.CardView>
     <TextView
         android:id="@+id/sign_up_text"
         android:layout_width="wrap_content"

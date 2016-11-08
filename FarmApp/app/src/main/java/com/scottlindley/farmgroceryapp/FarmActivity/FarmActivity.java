@@ -21,11 +21,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.scottlindley.farmgroceryapp.CartActivity.CartActivity;
+import com.scottlindley.farmgroceryapp.CustomObjects.Cart;
+import com.scottlindley.farmgroceryapp.CustomObjects.Food;
 import com.scottlindley.farmgroceryapp.CustomObjects.Like;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListRecyclerAdapter;
 import com.scottlindley.farmgroceryapp.LikedFarmsActivity.LikedFarmsActivity;
+import com.scottlindley.farmgroceryapp.OrderHistoryActivity.OrderHistoryActivity;
 import com.scottlindley.farmgroceryapp.R;
 
 import java.util.List;
@@ -86,7 +89,7 @@ public class FarmActivity extends AppCompatActivity
         } else if (id == R.id.nav_cart) {
             startActivity(new Intent(FarmActivity.this, CartActivity.class));
         } else if (id == R.id.nav_order_history) {
-
+            startActivity(new Intent(this, OrderHistoryActivity.class));
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_farm_list){
@@ -216,5 +219,14 @@ public class FarmActivity extends AppCompatActivity
     protected void onPostResume() {
         super.onPostResume();
         mPagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onPause() {
+        List<Food> cartItems = Cart.getInstance().getItems();
+        for(Food food : cartItems){
+            MySQLiteHelper.getInstance(FarmActivity.this).insertCartItem(food, mUserID);
+        }
+        super.onStop();
     }
 }

@@ -18,10 +18,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.scottlindley.farmgroceryapp.CustomObjects.Cart;
+import com.scottlindley.farmgroceryapp.CustomObjects.Food;
+import com.scottlindley.farmgroceryapp.CustomObjects.Order;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
 import com.scottlindley.farmgroceryapp.LikedFarmsActivity.LikedFarmsActivity;
+import com.scottlindley.farmgroceryapp.OrderHistoryActivity.OrderHistoryActivity;
 import com.scottlindley.farmgroceryapp.R;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import static com.scottlindley.farmgroceryapp.R.id.toolbar;
 
@@ -33,6 +41,7 @@ public class CartActivity extends AppCompatActivity
     private TextView mSubTotal, mTotal, mTax;
     private CardView mPlaceOrderButton;
     private double mRoundedSubTotal, mRoundedTax, mRoundedTotal;
+    private int mUserID;
 
     @Override
     public void handleIncrement() {
@@ -47,6 +56,10 @@ public class CartActivity extends AppCompatActivity
         setContentView(R.layout.activity_cart);
         mToolbar = (Toolbar) findViewById(toolbar);
         setSupportActionBar(mToolbar);
+
+        SharedPreferences preferences = getSharedPreferences(FarmListActivity.PREFERENCES_KEY, MODE_PRIVATE);
+        mUserID = preferences.getInt(FarmListActivity.DEVICE_USER_ID_KEY, -1);
+        if(mUserID ==-1){finish();}
 
         setUpNavBar();
 
@@ -85,7 +98,7 @@ public class CartActivity extends AppCompatActivity
         } else if (id == R.id.nav_cart) {
 
         } else if (id == R.id.nav_order_history) {
-
+            startActivity(new Intent(this, OrderHistoryActivity.class));
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_farm_list){
@@ -126,17 +139,25 @@ public class CartActivity extends AppCompatActivity
     public void setUpRecyclerView(){
         mRecyclerView = (RecyclerView)findViewById(R.id.cart_recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
-        mAdapter = new CartRecyclerAdapter(CartActivity.this);
+        List<Food> cartItems = MySQLiteHelper.getInstance(CartActivity.this).getCartItemsByUserID(mUserID);
+        mAdapter = new CartRecyclerAdapter(CartActivity.this, cartItems);
         mRecyclerView.setAdapter(mAdapter);
     }
 
     public void setUpOrderButton(){
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+        Date date = new Date();
+        final String todaysDate = dateFormat.format(date);
+
         mPlaceOrderButton = (CardView)findViewById(R.id.place_order_button);
         mPlaceOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MySQLiteHelper.getInstance(CartActivity.this).deleteCartItemsByUserID(mUserID);
                 Cart.getInstance().clearCart();
                 mAdapter.replaceData();
+                MySQLiteHelper.getInstance(CartActivity.this)
+                        .insertOrder(new Order(mRoundedTotal, todaysDate, mUserID));
                 Toast.makeText(CartActivity.this, "Order Confirmed!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -164,5 +185,16 @@ public class CartActivity extends AppCompatActivity
         Cart.getInstance().removeZeroQuantities();
         mAdapter.replaceData();
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        Cart.getInstance().removeZeroQuantities();
+        List<Food> cartItems = Cart.getInstance().getItems();
+        MySQLiteHelper.getInstance(CartActivity.this).deleteCartItemsByUserID(mUserID);
+        for(Food food : cartItems){
+            MySQLiteHelper.getInstance(CartActivity.this).insertCartItem(food, mUserID);
+        }
+        super.onStop();
     }
 }

@@ -13,15 +13,29 @@ public class Food {
     private String mFarmName;
     private int mQuantity;
     private double mPriceForOne;
+    private int mFarmID;
 
-    public Food(String name, double price, String farmName) {
+    public Food(String name, double price, Farm farm) {
         mName = name;
         mPrice = price;
         mPriceForOne = price;
-        mFarmName = farmName;
+        mFarmName = farm.getName();
+        mFarmID = farm.getID();
         mQuantity = 0;
 
-        switch (name){
+        assignImages(name);
+    }
+
+    public Food(String name, double price, Farm farm, int quantity){
+        this(name, price, farm);
+        mQuantity = quantity;
+    }
+
+
+
+
+    public void assignImages(String name) {
+        switch (name) {
             case "apples":
                 mImageID = R.drawable.apple;
                 break;
@@ -104,6 +118,8 @@ public class Food {
     }
 
 
+
+
     public int getQuantity() {
         return mQuantity;
     }
@@ -126,6 +142,10 @@ public class Food {
 
     public String getFarmName() {
         return mFarmName;
+    }
+
+    public int getFarmID() {
+        return mFarmID;
     }
 
     public String getName() {

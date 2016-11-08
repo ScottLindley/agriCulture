@@ -12,7 +12,6 @@ public class Farm {
     private String mName, mStory, mState, mSpecialty;
     private int mID;
     private int mPhotoID;
-    private List<Like> mNumLikes;
     private List<Food> mInventory;
 
     public Farm(int ID, String name, String story, String specialty, String state) {
@@ -90,9 +89,6 @@ public class Farm {
         return mSpecialty;
     }
 
-    public List<Like> getNumLikes() {
-        return mNumLikes;
-    }
 
     public int getID() {
         return mID;
@@ -102,11 +98,8 @@ public class Farm {
         return mPhotoID;
     }
 
-    public void setNumLikes(List<Like> numLikes) {
-        mNumLikes = numLikes;
-    }
 
-    public void setInventory(List<Food> inventory) {
+    public void getInventory(List<Food> inventory) {
         mInventory = inventory;
     }
 }

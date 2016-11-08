@@ -1,6 +1,7 @@
 package com.scottlindley.farmgroceryapp.CartActivity;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,9 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
     private List<Food> mItems;
     private QuantityButtonListener mListener;
 
-    public CartRecyclerAdapter(QuantityButtonListener listener) {
-        mItems = consolidateDuplicates(Cart.getInstance().getItems());
+    public CartRecyclerAdapter(QuantityButtonListener listener, List<Food> items) {
+//        mItems = consolidateDuplicates(items);
+        mItems = items;
         mListener = listener;
     }
 
@@ -80,7 +82,8 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
             boolean isInList = false;
             for (int j = 0; j < newItemList.size(); j++) {
                 if (newItemList.get(j).getName().equals(itemName)
-                        &&newItemList.get(j).getFarmName().equals(farmName)) {
+                        && newItemList.get(j).getFarmName().equals(farmName)
+                        && items.get(i)!=items.get(j)) {
                     newItemList.get(j).incrementQuantity();
                     isInList = true;
                     break;
@@ -97,7 +100,7 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
     }
 
     public interface QuantityButtonListener{
-        public void handleIncrement();
+        void handleIncrement();
     }
 
 

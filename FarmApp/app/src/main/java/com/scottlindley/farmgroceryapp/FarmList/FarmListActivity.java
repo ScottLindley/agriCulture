@@ -16,16 +16,20 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.scottlindley.farmgroceryapp.CartActivity.CartActivity;
+import com.scottlindley.farmgroceryapp.CustomObjects.Cart;
 import com.scottlindley.farmgroceryapp.CustomObjects.Farm;
+import com.scottlindley.farmgroceryapp.CustomObjects.Food;
 import com.scottlindley.farmgroceryapp.Database.DBAssetsHelper;
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.LikedFarmsActivity.LikedFarmsActivity;
+import com.scottlindley.farmgroceryapp.OrderHistoryActivity.OrderHistoryActivity;
 import com.scottlindley.farmgroceryapp.R;
 import com.scottlindley.farmgroceryapp.SignUpActivity.SignUpActivity;
 
@@ -60,6 +64,8 @@ public class FarmListActivity extends AppCompatActivity
         setUpFloatingActionButton();
 
         setUpNavBar();
+
+        lookForExistingCart();
     }
 
     @Override
@@ -109,10 +115,10 @@ public class FarmListActivity extends AppCompatActivity
         if (id == R.id.nav_like) {
             startActivity(new Intent(this, LikedFarmsActivity.class));
         } else if (id == R.id.nav_cart) {
-            startActivity(new Intent(FarmListActivity.this, CartActivity.class));
+            startActivity(new Intent(this, CartActivity.class));
 
         } else if (id == R.id.nav_order_history) {
-
+            startActivity(new Intent(this, OrderHistoryActivity.class));
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_farm_list){
@@ -172,6 +178,17 @@ public class FarmListActivity extends AppCompatActivity
                     MySQLiteHelper.getInstance(FarmListActivity.this).getUserByID(mDeviceUserID).getName());
             navUserState.setText(
                     MySQLiteHelper.getInstance(FarmListActivity.this).getUserByID(mDeviceUserID).getState());
+        }
+    }
+
+    public void lookForExistingCart() {
+        List<Food> cartItems = MySQLiteHelper.getInstance(FarmListActivity.this)
+                .getCartItemsByUserID(mDeviceUserID);
+        if(!cartItems.isEmpty()) {
+            Cart cart = Cart.getInstance();
+            for (Food food : cartItems) {
+                cart.getItems().add(food);
+            }
         }
     }
 

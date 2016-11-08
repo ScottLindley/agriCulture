@@ -32,7 +32,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_farm"/>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"

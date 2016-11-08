@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -15,7 +14,7 @@ import com.scottlindley.farmgroceryapp.FarmList.FarmListActivity;
 import com.scottlindley.farmgroceryapp.R;
 
 public class SignUpActivity extends AppCompatActivity {
-    private Button mButton;
+    private TextView mButtonText;
     private TextView mSignUpText;
     private EditText mNameEdit, mStateEdit;
 
@@ -32,16 +31,16 @@ public class SignUpActivity extends AppCompatActivity {
         mSignUpText = (TextView)findViewById(R.id.sign_up_text);
         mNameEdit = (EditText)findViewById(R.id.user_name_edit);
         mStateEdit = (EditText)findViewById(R.id.user_state_edit);
-        mButton = (Button)findViewById(R.id.sign_up_button);
+        mButtonText = (TextView) findViewById(R.id.button_text);
 
-        mButton.setOnClickListener(new View.OnClickListener() {
+        mButtonText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSignUpText.setVisibility(View.INVISIBLE);
                 mNameEdit.setVisibility(View.VISIBLE);
                 mStateEdit.setVisibility(View.VISIBLE);
-                mButton.setText("Okay");
-                mButton.setOnClickListener(new View.OnClickListener() {
+                mButtonText.setText("Okay");
+                mButtonText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (!mNameEdit.getText().toString().equals("")

@@ -32,7 +32,6 @@ public class Cart {
                 revisedList.add(food);
             }
         }
-
         mItems = revisedList;
     }
 
