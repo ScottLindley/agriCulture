@@ -49,10 +49,20 @@ public class FarmInfoFragment extends Fragment {
 
         /*
         States in the database are all lowercase to make searching easier this line
-        of code capitalizes the first letter
+        of code capitalizes the first letter of each word
         */
-        String upperCaseState = Character.toString(selectedFarm.getState().charAt(0)).toUpperCase()
-                +selectedFarm.getState().substring(1,selectedFarm.getState().length());
+        String[] statePieces = selectedFarm.getState().split(" ");
+        String upperCaseState;
+
+        statePieces[0] = Character.toString(statePieces[0].charAt(0)).toUpperCase()+
+            statePieces[0].substring(1);
+        if(statePieces.length>1) {
+            statePieces[1] = " "+Character.toString(statePieces[1].charAt(0)).toUpperCase()+
+            statePieces[1].substring(1);
+            upperCaseState = statePieces[0] + statePieces[1];
+        }else{
+            upperCaseState = statePieces[0];
+        }
 
         photo.setImageResource(selectedFarm.getPhotoID());
         story.setText(selectedFarm.getStory());

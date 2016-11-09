@@ -23,49 +23,49 @@ public class Farm {
 
         switch (mName) {
             case "McDonald Farms":
-                mPhotoID = (R.drawable.mcdonald);
+                mPhotoID = (R.drawable.mcdonald_small);
                 break;
-            case "Stoney Hill Farms":
-                mPhotoID = (R.drawable.stony_hill);
+            case "Stony Hill Farms":
+                mPhotoID = (R.drawable.stony_hill_small);
                 break;
             case "Sunny Side Farms":
-                mPhotoID = (R.drawable.sunny);
+                mPhotoID = (R.drawable.sunny_small);
                 break;
             case "Seed Sowers":
-                mPhotoID = (R.drawable.sowers);
+                mPhotoID = (R.drawable.sowers_small);
                 break;
             case "The Funny Farm":
-                mPhotoID = (R.drawable.funny);
+                mPhotoID = (R.drawable.funny_small);
                 break;
             case "Turnip the Beet":
-                mPhotoID = (R.drawable.beet);
+                mPhotoID = (R.drawable.beet_small);
                 break;
             case "Scare Crow Farms":
-                mPhotoID = (R.drawable.scarecrow);
+                mPhotoID = (R.drawable.scarecrow_small);
                 break;
             case "Couch Potato Farms":
-                mPhotoID = (R.drawable.couch_potato);
+                mPhotoID = (R.drawable.couch_potato_small);
                 break;
             case "Peter Piper Farms":
                 mPhotoID = (R.drawable.pickled_peppers);
                 break;
             case "Strawberry Fields":
-                mPhotoID = (R.drawable.strawberry_fields);
+                mPhotoID = (R.drawable.strawberry_fields_small);
                 break;
             case "Buffalo Hill Gardens":
-                mPhotoID = (R.drawable.buffalo_hills);
+                mPhotoID = (R.drawable.buffalo_hills_small);
                 break;
             case "Deer Cove Acres":
-                mPhotoID = (R.drawable.deer_cove);
+                mPhotoID = (R.drawable.deer_cove_small);
                 break;
             case "Angry Beaver Nursery":
-                mPhotoID = (R.drawable.angry_beaver);
+                mPhotoID = (R.drawable.angry_beaver_small);
                 break;
             case "Big Bear Orchard":
-                mPhotoID = (R.drawable.bear_orchard);
+                mPhotoID = (R.drawable.bear_orchard_small);
                 break;
             case "Bumble Bee Lands":
-                mPhotoID = (R.drawable.bee_land);
+                mPhotoID = (R.drawable.bee_land_small);
                 break;
             case "Flower Hills Range":
                 mPhotoID = (R.drawable.flower_hill);

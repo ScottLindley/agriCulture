@@ -36,6 +36,7 @@ import static com.scottlindley.farmgroceryapp.R.id.toolbar;
 
 public class CartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, CartRecyclerAdapter.QuantityButtonListener {
+    public static final String ORDER_PLACED_KEY = "order placed";
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private CartRecyclerAdapter mAdapter;
@@ -43,6 +44,7 @@ public class CartActivity extends AppCompatActivity
     private CardView mPlaceOrderButton;
     private double mRoundedSubTotal, mRoundedTax, mRoundedTotal;
     private int mUserID;
+    private List<Food> mItems;
 
     @Override
     public void handleIncrement() {
@@ -76,6 +78,7 @@ public class CartActivity extends AppCompatActivity
 
         setRoundedPrices();
 
+        mItems = MySQLiteHelper.getInstance(CartActivity.this).getCartItemsByUserID(mUserID);
     }
 
     @Override
@@ -152,12 +155,18 @@ public class CartActivity extends AppCompatActivity
         mPlaceOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MySQLiteHelper.getInstance(CartActivity.this).deleteCartItemsByUserID(mUserID);
-                Cart.getInstance().clearCart();
-                mAdapter.replaceData();
-                MySQLiteHelper.getInstance(CartActivity.this)
-                        .insertOrder(new Order(mRoundedTotal, todaysDate, mUserID));
-                Toast.makeText(CartActivity.this, "Order Confirmed!", Toast.LENGTH_SHORT).show();
+                if(!mItems.isEmpty()) {
+                    MySQLiteHelper.getInstance(CartActivity.this).deleteCartItemsByUserID(mUserID);
+                    Cart.getInstance().clearCart();
+                    mAdapter.replaceData();
+                    MySQLiteHelper.getInstance(CartActivity.this)
+                            .insertOrder(new Order(mRoundedTotal, todaysDate, mUserID));
+                    Toast.makeText(CartActivity.this, "Order Confirmed!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(CartActivity.this, OrderHistoryActivity.class);
+                    intent.putExtra(ORDER_PLACED_KEY, 1);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
     }
@@ -183,6 +192,13 @@ public class CartActivity extends AppCompatActivity
     protected void onResume() {
         Cart.getInstance().removeZeroQuantities();
         mAdapter.replaceData();
+
+        TextView emptyText = (TextView)findViewById(R.id.empty_cart_text);
+        if(mItems.isEmpty()){
+            emptyText.setVisibility(View.VISIBLE);
+        }else{
+            emptyText.setVisibility(View.INVISIBLE);
+        }
         super.onResume();
     }
 

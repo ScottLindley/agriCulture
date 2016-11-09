@@ -71,10 +71,12 @@ public class LikedFarmsRecyclerAdapter extends RecyclerView.Adapter<LikedFarmsRe
                 if(isLiked){
                     holder.mHeartButton.setImageResource(R.drawable.ic_favorite_border_white_24dp);
                     holder.mHeartButton.setColorFilter(Color.rgb(120,120,120));
+                    holder.mHeartButton.setAlpha(0.25f);
                     MySQLiteHelper.getInstance(mContext).deleteLike(mLikes.get(holder.getAdapterPosition()));
                 }else{
                     holder.mHeartButton.setImageResource(R.drawable.ic_favorite_white_24dp);
                     holder.mHeartButton.setColorFilter(Color.rgb(183,28,28));
+                    holder.mHeartButton.setAlpha(1f);
                     MySQLiteHelper.getInstance(mContext).insertLike(new Like(likedFarm.getID(),mUserID));
                 }
             }

@@ -102,6 +102,16 @@
         android:layout_above="@id/bottom_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/empty_cart_text"
+        android:background="#eee"
+        android:text="Cart is empty!"
+        android:textSize="46sp"
+        android:gravity="center_horizontal"
+        android:paddingTop="150dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"/>
 
 
 

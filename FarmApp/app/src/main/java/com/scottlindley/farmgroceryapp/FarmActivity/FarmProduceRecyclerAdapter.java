@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.scottlindley.farmgroceryapp.CustomObjects.Cart;
 import com.scottlindley.farmgroceryapp.CustomObjects.Food;
+import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.R;
 
 import java.util.List;
@@ -52,6 +53,8 @@ public class FarmProduceRecyclerAdapter extends RecyclerView.Adapter<FarmProduce
             holder.mAddToCartButton.setAlpha(0.35f);
             holder.mAddToCartButton.setClickable(false);
         }else {
+            holder.mAddToCartButton.setAlpha(1.0f);
+            holder.mAddToCartButton.setClickable(true);
             holder.mAddToCartButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -88,8 +91,8 @@ public class FarmProduceRecyclerAdapter extends RecyclerView.Adapter<FarmProduce
         }
     }
 
-    public void refreshData(List<Food> foods){
-        mFoods = foods;
+    public void refreshData(int farmID){
+        mFoods = MySQLiteHelper.getInstance(mContext).getFoodByFarm(farmID);
         notifyDataSetChanged();
     }
 }

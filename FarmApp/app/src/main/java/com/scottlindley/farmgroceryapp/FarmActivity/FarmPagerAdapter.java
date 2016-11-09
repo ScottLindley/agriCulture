@@ -51,10 +51,9 @@ public class FarmPagerAdapter extends FragmentPagerAdapter {
     public int getItemPosition(Object object) {
         if(object instanceof FarmActivity.OnLikeButtonListener){
             ((FarmActivity.OnLikeButtonListener)object).onLikeButtonClicked(mFarmID);
-//            return POSITION_NONE;
         }
         if(object instanceof FarmProduceFragment){
-            ((FarmProduceFragment)object).getAdapter().notifyDataSetChanged();
+            ((FarmProduceFragment)object).getAdapter().refreshData(mFarmID);
         }
         return super.getItemPosition(object);
     }

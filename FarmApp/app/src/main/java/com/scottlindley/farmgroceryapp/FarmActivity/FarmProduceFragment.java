@@ -58,12 +58,6 @@ public class FarmProduceFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mAdapter.refreshData(MySQLiteHelper.getInstance(mContext).getFoodByFarm(mSelectedFarm.getID()));
-
-    }
 
     public FarmProduceRecyclerAdapter getAdapter(){
         return mAdapter;

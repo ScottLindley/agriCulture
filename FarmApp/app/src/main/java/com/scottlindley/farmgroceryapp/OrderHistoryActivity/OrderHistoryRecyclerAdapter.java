@@ -1,10 +1,12 @@
 package com.scottlindley.farmgroceryapp.OrderHistoryActivity;
 
-import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.scottlindley.farmgroceryapp.CustomObjects.Order;
@@ -20,11 +22,11 @@ import java.util.List;
 public class OrderHistoryRecyclerAdapter extends RecyclerView.Adapter<OrderHistoryRecyclerAdapter.OrderHistoryViewHolder>{
 
     private List<Order> mOrders;
-    private Context mContext;
+    private boolean mNewOrder;
 
-    public OrderHistoryRecyclerAdapter(List<Order> orders, Context context) {
+    public OrderHistoryRecyclerAdapter(List<Order> orders, boolean newOrder) {
         mOrders = orders;
-        mContext = context;
+        mNewOrder = newOrder;
     }
 
     @Override
@@ -38,6 +40,12 @@ public class OrderHistoryRecyclerAdapter extends RecyclerView.Adapter<OrderHisto
     public void onBindViewHolder(OrderHistoryViewHolder holder, int position) {
         holder.mOrderPrice.setText("$"+mOrders.get(position).getOrderPrice());
         holder.mOrderDate.setText(mOrders.get(position).getOrderDate());
+        if(mNewOrder && position==getItemCount()-1){
+            holder.mLayout.setBackgroundColor(Color.WHITE);
+            holder.mOrderDate.setText("");
+            holder.mOrderText.setText("Ordered Just Now!");
+            holder.mOrderText.setTypeface(null, Typeface.BOLD);
+        }
     }
 
     @Override
@@ -46,11 +54,14 @@ public class OrderHistoryRecyclerAdapter extends RecyclerView.Adapter<OrderHisto
     }
 
     public class OrderHistoryViewHolder extends RecyclerView.ViewHolder{
-        public TextView mOrderPrice, mOrderDate;
+        public TextView mOrderPrice, mOrderDate, mOrderText;
+        public RelativeLayout mLayout;
         public OrderHistoryViewHolder(View itemView) {
             super(itemView);
+            mLayout = (RelativeLayout)itemView.findViewById(R.id.card_layout);
             mOrderDate = (TextView)itemView.findViewById(R.id.order_date);
             mOrderPrice = (TextView)itemView.findViewById(R.id.order_price);
+            mOrderText = (TextView)itemView.findViewById(R.id.order_text);
         }
     }
 }

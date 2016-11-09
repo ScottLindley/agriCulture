@@ -3,7 +3,6 @@ package com.scottlindley.farmgroceryapp.LikedFarmsActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -46,8 +45,6 @@ public class LikedFarmsActivity extends AppCompatActivity
         SharedPreferences preferences = getSharedPreferences(FarmListActivity.PREFERENCES_KEY, MODE_PRIVATE);
         mUserID = preferences.getInt(FarmListActivity.DEVICE_USER_ID_KEY, -1);
         if(mUserID ==-1){finish();}
-
-        setUpFloatingActionButton();
 
         setUpNavBar();
 
@@ -110,18 +107,17 @@ public class LikedFarmsActivity extends AppCompatActivity
         }
     }
 
-    public void setUpFloatingActionButton(){
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LikedFarmsActivity.this, CartActivity.class));
-            }
-        });
-    }
 
     public void setUpRecyclerView(){
         List<Like> likes = MySQLiteHelper.getInstance(this).getUserLikes(mUserID);
+
+        TextView noFarmsLikedText = (TextView)findViewById(R.id.no_liked_farms_text);
+
+        if(likes.isEmpty()){
+            noFarmsLikedText.setVisibility(View.VISIBLE);
+        }else{
+            noFarmsLikedText.setVisibility(View.INVISIBLE);
+        }
 
         mRecyclerView = (RecyclerView)findViewById(R.id.likes_activity_recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(LikedFarmsActivity.this));

@@ -16,7 +16,7 @@
         <ImageView
             android:id="@+id/farm_photo"
             android:layout_width="match_parent"
-            android:layout_height="85dp"
+            android:layout_height="83.5dp"
             android:src="@color/colorAccent"
             android:layout_marginBottom="4dp"/>
         <TextView

@@ -32,6 +32,7 @@ public class OrderHistoryActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private List<Order> mOrders;
     private int mUserID;
+    private boolean mNewOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class OrderHistoryActivity extends AppCompatActivity
         setUpNavBar();
 
         setUpRecycler();
+
     }
 
     @Override
@@ -109,9 +111,19 @@ public class OrderHistoryActivity extends AppCompatActivity
     public void setUpRecycler(){
         mOrders = MySQLiteHelper.getInstance(OrderHistoryActivity.this).getOrdersByUserID(mUserID);
 
+        Intent receivedIntent = getIntent();
+        int orderPlaced = receivedIntent.getIntExtra(CartActivity.ORDER_PLACED_KEY, 0);
+
+        if(orderPlaced==1){
+            mNewOrder = true;
+        }else{
+            mNewOrder = false;
+        }
+
         mRecyclerView = (RecyclerView)findViewById(R.id.order_history_recycler);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(OrderHistoryActivity.this));
-        mAdapter = new OrderHistoryRecyclerAdapter(mOrders, OrderHistoryActivity.this);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(OrderHistoryActivity.this,LinearLayoutManager.VERTICAL, true));
+        mAdapter = new OrderHistoryRecyclerAdapter(mOrders, mNewOrder);
         mRecyclerView.setAdapter(mAdapter);
+        if(mNewOrder){mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount()-1);}
     }
 }
