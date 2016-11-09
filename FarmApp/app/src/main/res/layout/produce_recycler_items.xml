@@ -18,10 +18,20 @@
             android:layout_height="890dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="18dp"/>
+        <ImageView
+            android:id="@+id/add_to_cart"
+            android:src="@drawable/ic_add_shopping_cart_black_24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
         <TextView
             android:id="@+id/food_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/add_to_cart"
+            android:layout_marginRight="8dp"
             android:textSize="16sp"
             android:layout_toRightOf="@id/food_image"
             android:layout_marginTop="16dp"
@@ -33,14 +43,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/food_name"
             android:layout_toRightOf="@id/food_image"/>
-        <ImageView
-            android:id="@+id/add_to_cart"
-            android:src="@drawable/ic_add_shopping_cart_black_24dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="30dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

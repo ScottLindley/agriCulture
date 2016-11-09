@@ -1,9 +1,11 @@
 package com.scottlindley.farmgroceryapp.FarmActivity;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,7 +52,12 @@ public class FarmProduceFragment extends Fragment {
         mSelectedFarm = MySQLiteHelper.getInstance(view.getContext()).getFarmByID(farmID);
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.produce_fragment_recycler);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
+        }
 
         List<Food> foods = MySQLiteHelper.getInstance(mContext).getFoodByFarm(mSelectedFarm.getID());
 

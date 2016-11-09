@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -39,6 +40,7 @@ import java.util.List;
 
 public class FarmListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     public static final String PREFERENCES_KEY = "preferences";
     public static final String DEVICE_USER_ID_KEY = "device_user_id";
     public static final String INSTANCE_STATE_FARMS = "state_of_farms";
@@ -96,6 +98,7 @@ public class FarmListActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 searchView.onActionViewCollapsed();
+                mFarms = MySQLiteHelper.getInstance(FarmListActivity.this).getAllFarms();
                 mAdapter.replaceData(mFarms);
             }
         });
@@ -117,6 +120,7 @@ public class FarmListActivity extends AppCompatActivity
                     .getFarmsByFood(query.toLowerCase());
             for(Farm farm : searchedFoods){
                 searchedFarms.add(farm);}
+            mFarms = searchedFarms;
             mAdapter.replaceData(searchedFarms);
         }
     }
@@ -125,7 +129,6 @@ public class FarmListActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_like) {
@@ -166,8 +169,12 @@ public class FarmListActivity extends AppCompatActivity
         mFarms = MySQLiteHelper.getInstance(FarmListActivity.this).getAllFarms();
 
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(FarmListActivity.this, 2));
 
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            mRecyclerView.setLayoutManager(new GridLayoutManager(FarmListActivity.this, 3));
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(FarmListActivity.this, 2));
+        }
         mAdapter = new FarmListRecyclerAdapter(mFarms);
         mRecyclerView.setAdapter(mAdapter);
     }

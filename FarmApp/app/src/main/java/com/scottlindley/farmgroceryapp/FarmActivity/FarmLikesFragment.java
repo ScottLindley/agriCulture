@@ -1,18 +1,20 @@
 package com.scottlindley.farmgroceryapp.FarmActivity;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.CustomObjects.Farm;
 import com.scottlindley.farmgroceryapp.CustomObjects.Like;
+import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
 import com.scottlindley.farmgroceryapp.R;
 
 import java.util.List;
@@ -61,7 +63,11 @@ public class FarmLikesFragment extends Fragment implements FarmActivity.OnLikeBu
         mLikes = MySQLiteHelper.getInstance(mContext).getLikes(mSelectedFarm.getID());
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.likes_recycler);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
+        }
         mAdapter = new FarmLikesRecyclerAdapter(mContext, mLikes);
         mRecyclerView.setAdapter(mAdapter);
     }

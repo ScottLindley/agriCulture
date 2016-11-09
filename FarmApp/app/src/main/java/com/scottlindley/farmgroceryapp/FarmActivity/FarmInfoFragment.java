@@ -1,5 +1,6 @@
 package com.scottlindley.farmgroceryapp.FarmActivity;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.scottlindley.farmgroceryapp.Database.MySQLiteHelper;
@@ -46,6 +48,11 @@ public class FarmInfoFragment extends Fragment {
         TextView story = (TextView)view.findViewById(R.id.farm_story);
         TextView state = (TextView)view.findViewById(R.id.farm_state);
         TextView specialty = (TextView)view.findViewById(R.id.farm_specialty);
+        RelativeLayout layout = (RelativeLayout)view.findViewById(R.id.info_fragment_layout);
+
+        if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE){
+            layout.setPadding(150,0,150,0);
+        }
 
         /*
         States in the database are all lowercase to make searching easier this line
