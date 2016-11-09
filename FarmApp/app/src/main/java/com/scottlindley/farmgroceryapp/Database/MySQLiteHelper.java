@@ -193,6 +193,29 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         return foods;
     }
 
+    public List<Farm> getFarmsByFood(String foodName){
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "SELECT * FROM "+FOODS_TABLE_NAME+" INNER JOIN "+FARMS_TABLE_NAME+" ON "+
+                FOODS_TABLE_NAME+"."+COL_FARM_ID+" = "+FARMS_TABLE_NAME+"."+COL_ID+" WHERE "+
+                FOODS_TABLE_NAME+"."+COL_NAME+" LIKE '%"+foodName+"%'";
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<Farm> farms = new ArrayList<>();
+        if(cursor.moveToFirst()){
+            while(!cursor.isAfterLast()){
+                farms.add(new Farm(
+                        cursor.getInt(cursor.getColumnIndex(COL_ID)),
+                        cursor.getString(cursor.getColumnIndex(COL_NAME)),
+                        cursor.getString(cursor.getColumnIndex(COL_STORY)),
+                        cursor.getString(cursor.getColumnIndex(COL_SPECIALTY)),
+                        cursor.getString(cursor.getColumnIndex(COL_STATE))));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        return farms;
+    }
+
     public List<Like> getLikes(int farmID){
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(

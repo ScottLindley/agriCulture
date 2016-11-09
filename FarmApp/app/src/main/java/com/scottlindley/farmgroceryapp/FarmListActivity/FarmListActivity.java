@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.scottlindley.farmgroceryapp.CartActivity.CartActivity;
@@ -33,12 +34,14 @@ import com.scottlindley.farmgroceryapp.R;
 import com.scottlindley.farmgroceryapp.SettingsActivity.SettingsActivity;
 import com.scottlindley.farmgroceryapp.SignUpActivity.SignUpActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FarmListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String PREFERENCES_KEY = "preferences";
     public static final String DEVICE_USER_ID_KEY = "device_user_id";
+    public static final String INSTANCE_STATE_FARMS = "state_of_farms";
     private int mDeviceUserID;
 
     private Toolbar mToolbar;
@@ -84,9 +87,18 @@ public class FarmListActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.search, menu);
 
         SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView)menu.findItem(R.id.search).getActionView();
+        final SearchView searchView = (SearchView)menu.findItem(R.id.search).getActionView();
         ComponentName componentName = new ComponentName(this, FarmListActivity.class);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
+
+        ImageView closeButton = (ImageView)searchView.findViewById(R.id.search_close_btn);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchView.onActionViewCollapsed();
+                mAdapter.replaceData(mFarms);
+            }
+        });
         return true;
     }
 
@@ -101,6 +113,10 @@ public class FarmListActivity extends AppCompatActivity
             String query = intent.getStringExtra(SearchManager.QUERY);
             List<Farm> searchedFarms = MySQLiteHelper.getInstance(FarmListActivity.this)
                     .searchFarms(query.toLowerCase());
+            List<Farm> searchedFoods = MySQLiteHelper.getInstance(FarmListActivity.this)
+                    .getFarmsByFood(query.toLowerCase());
+            for(Farm farm : searchedFoods){
+                searchedFarms.add(farm);}
             mAdapter.replaceData(searchedFarms);
         }
     }
@@ -189,4 +205,23 @@ public class FarmListActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        ArrayList<Integer> farmIDs = new ArrayList<>();
+        for(Farm farm: mFarms){farmIDs.add(farm.getID());}
+        outState.putIntegerArrayList(INSTANCE_STATE_FARMS, farmIDs);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        ArrayList<Integer> farmIDs =
+                savedInstanceState.getIntegerArrayList(INSTANCE_STATE_FARMS);
+        List<Farm> farms = new ArrayList<>();
+        for(Integer i : farmIDs){
+            farms.add(MySQLiteHelper.getInstance(FarmListActivity.this).getFarmByID(i));
+        }
+        mFarms = farms;
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 }
