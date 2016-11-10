@@ -11,7 +11,6 @@ import com.scottlindley.farmgroceryapp.CustomObjects.Cart;
 import com.scottlindley.farmgroceryapp.CustomObjects.Food;
 import com.scottlindley.farmgroceryapp.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -73,25 +72,22 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
     name AND the same farm name. It returns a list of food items with adjusted quantities and
     instead of duplicates.
      */
-    public List<Food> consolidateDuplicates(List<Food> items){
-        List<Food> newItemList = new ArrayList<>();
-        for (int i=0; i<items.size(); i++) {
+    //TODO: TEST
+    public List<Food> consolidateDuplicates(List<Food> items) {
+        for (int i = 0; i < items.size(); i++) {
             String itemName = items.get(i).getName();
             String farmName = items.get(i).getFarmName();
-            boolean isInList = false;
-            for (int j = 0; j < newItemList.size(); j++) {
-                if (newItemList.get(j).getName().equals(itemName)
-                        && newItemList.get(j).getFarmName().equals(farmName)
-                        && items.get(i)!=items.get(j)) {
-                    newItemList.get(j).incrementQuantity();
-                    isInList = true;
-                    break;
+            for (int j = 0; j < items.size(); j++) {
+                if (items.get(j).getName().equals(itemName)
+                        && items.get(j).getFarmName().equals(farmName)
+                        && i != j) {
+                    items.remove(j);
                 }
             }
-            if (!isInList) {newItemList.add(items.get(i));}
         }
-        return newItemList;
+        return items;
     }
+
 
     public void replaceData(){
         mItems = consolidateDuplicates(Cart.getInstance().getItems());

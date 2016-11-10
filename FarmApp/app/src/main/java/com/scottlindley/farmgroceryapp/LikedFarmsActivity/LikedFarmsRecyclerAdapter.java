@@ -74,6 +74,7 @@ public class LikedFarmsRecyclerAdapter extends RecyclerView.Adapter<LikedFarmsRe
             }
         });
 
+        //Toggles 'like' on a Farm and updates the Like in the database
         holder.mHeartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

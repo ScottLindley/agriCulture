@@ -57,7 +57,6 @@ public class SettingsActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -107,6 +106,7 @@ public class SettingsActivity extends AppCompatActivity
         mStateEdit = (EditText)findViewById(R.id.user_state_edit);
         mButtonText = (TextView) findViewById(R.id.edit_profile_text);
 
+        //Guide the user through the edit account process with simple textviews and edittexts
         mButtonText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +116,7 @@ public class SettingsActivity extends AppCompatActivity
                 mButtonText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //update the user's info in the database and insert the userID into SharedPreferences
                         if (!mNameEdit.getText().toString().equals("")
                                 && !mStateEdit.getText().toString().equals("")) {
                             User user = new User(
@@ -139,7 +140,6 @@ public class SettingsActivity extends AppCompatActivity
                                 mStateEdit.setError("State cannot be blank");
                             }
                         }
-
                     }
                 });
             }

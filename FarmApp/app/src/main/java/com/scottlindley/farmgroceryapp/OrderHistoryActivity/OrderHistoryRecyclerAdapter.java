@@ -40,6 +40,8 @@ public class OrderHistoryRecyclerAdapter extends RecyclerView.Adapter<OrderHisto
     public void onBindViewHolder(OrderHistoryViewHolder holder, int position) {
         holder.mOrderPrice.setText("$"+mOrders.get(position).getOrderPrice());
         holder.mOrderDate.setText(mOrders.get(position).getOrderDate());
+
+        //if the list contains a brand new order, change its properties
         if(mNewOrder && position==getItemCount()-1){
             holder.mLayout.setBackgroundColor(Color.WHITE);
             holder.mOrderDate.setText("");

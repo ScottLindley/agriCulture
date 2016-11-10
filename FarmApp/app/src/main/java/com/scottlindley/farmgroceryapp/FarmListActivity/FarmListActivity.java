@@ -75,6 +75,7 @@ public class FarmListActivity extends AppCompatActivity
         lookForExistingCart();
     }
 
+    //When back is pressed and the nav bar is open, just close the nav bar
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -85,6 +86,7 @@ public class FarmListActivity extends AppCompatActivity
         }
     }
 
+    //Set up search menu item
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -95,6 +97,8 @@ public class FarmListActivity extends AppCompatActivity
         ComponentName componentName = new ComponentName(this, FarmListActivity.class);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
 
+       /* This overrides the 'x' button's functions. I have made it now collapse the search view
+        and then repopulate the list with all farms*/
         ImageView closeButton = (ImageView)searchView.findViewById(R.id.search_close_btn);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,14 +120,19 @@ public class FarmListActivity extends AppCompatActivity
     private void handleIntent(Intent intent){
         if(Intent.ACTION_SEARCH.equals(intent.getAction())){
             String query = intent.getStringExtra(SearchManager.QUERY);
+            //Looks for farms by name or by the farm's state
             List<Farm> searchedFarms = MySQLiteHelper.getInstance(FarmListActivity.this)
                     .searchFarms(query.toLowerCase());
+            //Looks for farms by food name (let's user search for farms that sell certain foods)
             List<Farm> searchedFoods = MySQLiteHelper.getInstance(FarmListActivity.this)
                     .getFarmsByFood(query.toLowerCase());
+            //Then the two lists are combined into one
             for(Farm farm : searchedFoods){
                 searchedFarms.add(farm);}
+            //Now find and remove any duplicates
             searchedFarms = removeSearchDuplicates(searchedFarms);
             mFarms = searchedFarms;
+            //Refresh the adapter
             mAdapter.replaceData(searchedFarms);
         }
     }
@@ -143,7 +152,6 @@ public class FarmListActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

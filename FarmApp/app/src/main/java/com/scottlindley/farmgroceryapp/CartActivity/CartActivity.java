@@ -48,6 +48,8 @@ public class CartActivity extends AppCompatActivity
     private int mUserID;
     private List<Food> mItems;
 
+
+    //Calls the two methods below
     @Override
     public void handleIncrement() {
         roundNumbers();
@@ -83,6 +85,7 @@ public class CartActivity extends AppCompatActivity
         mItems = MySQLiteHelper.getInstance(CartActivity.this).getCartItemsByUserID(mUserID);
     }
 
+    //back button closes the drawer if the drawer is open
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -114,7 +117,8 @@ public class CartActivity extends AppCompatActivity
         return true;
     }
 
-
+   /* This just consolidates some nav bar set up. It also finds the user ID of the user currently
+    signed in.*/
     public void setUpNavBar(){
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -140,6 +144,7 @@ public class CartActivity extends AppCompatActivity
         }
     }
 
+    //Sets up recycler view and sets number of columns depending on the phone's orientation
     public void setUpRecyclerView(){
         mRecyclerView = (RecyclerView)findViewById(R.id.cart_recycler);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -151,6 +156,7 @@ public class CartActivity extends AppCompatActivity
         mAdapter = new CartRecyclerAdapter(CartActivity.this, cartItems);
         mRecyclerView.setAdapter(mAdapter);
     }
+
 
     public void setUpOrderButton(){
         DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
@@ -176,7 +182,7 @@ public class CartActivity extends AppCompatActivity
             }
         });
     }
-
+    //this method rounds these doubles down to no more than two digits after the decimal
     public void roundNumbers(){
         mRoundedSubTotal = (Cart.getInstance().getSubTotal()*100);
         mRoundedSubTotal = Math.round(mRoundedSubTotal);
@@ -188,12 +194,15 @@ public class CartActivity extends AppCompatActivity
         mRoundedTotal = mRoundedTotal/100;
     }
 
+
     public void setRoundedPrices(){
         mSubTotal.setText("$"+ mRoundedSubTotal);
         mTax.setText("$"+ mRoundedTax);
         mTotal.setText("$"+ mRoundedTotal);
     }
 
+    /*Whenever this activity is resumed, it checks to see whether or not the cart is empty
+    if it is then it shows the cart is empty splash text*/
     @Override
     protected void onResume() {
         Cart.getInstance().removeZeroQuantities();
@@ -208,6 +217,8 @@ public class CartActivity extends AppCompatActivity
         super.onResume();
     }
 
+    /*When paused, this method removes any item with a zero quantity from the cart. Then it deletes
+    the currently saved cart from the database. Finally, adds the newly cleaned cart.*/
     @Override
     protected void onPause() {
         Cart.getInstance().removeZeroQuantities();
@@ -217,5 +228,17 @@ public class CartActivity extends AppCompatActivity
             MySQLiteHelper.getInstance(CartActivity.this).insertCartItem(food, mUserID);
         }
         super.onStop();
+    }
+
+    public double getRoundedSubTotal() {
+        return mRoundedSubTotal;
+    }
+
+    public double getRoundedTax() {
+        return mRoundedTax;
+    }
+
+    public double getRoundedTotal() {
+        return mRoundedTotal;
     }
 }

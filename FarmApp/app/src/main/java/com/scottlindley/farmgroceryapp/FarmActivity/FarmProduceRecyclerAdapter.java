@@ -42,6 +42,7 @@ public class FarmProduceRecyclerAdapter extends RecyclerView.Adapter<FarmProduce
         holder.mFoodName.setText(mFoods.get(position).getName());
         holder.mFoodPrice.setText("$"+Double.toString(mFoods.get(position).getPrice()));
 
+        //Look to see if this food is currently in the cart
         boolean isInCart = false;
         for (Food f: Cart.getInstance().getItems()){
             if (f.getName().equals(mFoods.get(position).getName())
@@ -49,6 +50,8 @@ public class FarmProduceRecyclerAdapter extends RecyclerView.Adapter<FarmProduce
                 isInCart = true;
             }
         }
+        /*If it is then grey out the add to cart button and make it unclickable
+        If it's not in the cart then add it to the cart with a quantity of '1' when clicked*/
         if(isInCart){
             holder.mAddToCartButton.setAlpha(0.35f);
             holder.mAddToCartButton.setClickable(false);
@@ -87,7 +90,7 @@ public class FarmProduceRecyclerAdapter extends RecyclerView.Adapter<FarmProduce
             mFoodName = (TextView) itemView.findViewById(R.id.food_name);
             mFoodPrice = (TextView) itemView.findViewById(R.id.food_price);
             mFoodPhoto = (ImageView) itemView.findViewById(R.id.food_image);
-            mAddToCartButton = (ImageView) itemView.findViewById(R.id.add_to_cart);
+            mAddToCartButton = (ImageView) itemView.findViewById(R.id.add_to_cart_button);
         }
     }
 

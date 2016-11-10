@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class CartTest {
     @Test
-    public void removeZeroQuantitiesTest(){
+    public void removeZeroQuantitiesTest() throws Exception{
         Cart cart = Cart.getInstance();
         Farm farm = new Farm(1,"myFarm","story","specialty","state");
         cart.getItems().add(new Food("apple", 3.00, farm, 0));
@@ -26,7 +26,7 @@ public class CartTest {
     }
 
     @Test
-    public void clearCartTest(){
+    public void clearCartTest() throws Exception{
         Cart cart = Cart.getInstance();
         Farm farm = new Farm(1,"myFarm","story","specialty","state");
         cart.getItems().add(new Food("apple", 3.00, farm, 15));

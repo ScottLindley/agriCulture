@@ -103,15 +103,15 @@ public class LikedFarmsActivity extends AppCompatActivity
 
         if(mUserID!=-1) {
             navUserName.setText(
-                    MySQLiteHelper.getInstance(LikedFarmsActivity.this).getUserByID(mUserID).getName());
+                    mHelper.getUserByID(mUserID).getName());
             navUserState.setText(
-                    MySQLiteHelper.getInstance(LikedFarmsActivity.this).getUserByID(mUserID).getState());
+                    mHelper.getUserByID(mUserID).getState());
         }
     }
 
 
     public void setUpRecyclerView(){
-        List<Like> likes = MySQLiteHelper.getInstance(this).getUserLikes(mUserID);
+        List<Like> likes = mHelper.getUserLikes(mUserID);
 
         TextView noFarmsLikedText = (TextView)findViewById(R.id.no_liked_farms_text);
 

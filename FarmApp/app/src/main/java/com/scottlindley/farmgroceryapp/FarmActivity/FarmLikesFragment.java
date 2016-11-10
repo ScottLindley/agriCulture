@@ -32,6 +32,7 @@ public class FarmLikesFragment extends Fragment implements FarmActivity.OnLikeBu
     private Context mContext;
 
 
+    //when the toolbar's like button is clicked, refresh the adapter and scroll to the newly added like
     @Override
     public void onLikeButtonClicked(int farmID) {
         mAdapter.replaceData(MySQLiteHelper.getInstance(mContext).getLikes(farmID));
@@ -70,9 +71,5 @@ public class FarmLikesFragment extends Fragment implements FarmActivity.OnLikeBu
         }
         mAdapter = new FarmLikesRecyclerAdapter(mContext, mLikes);
         mRecyclerView.setAdapter(mAdapter);
-    }
-
-    public FarmActivity.OnLikeButtonListener getRecyclerListener(){
-        return (FarmActivity.OnLikeButtonListener)mRecyclerView;
     }
 }

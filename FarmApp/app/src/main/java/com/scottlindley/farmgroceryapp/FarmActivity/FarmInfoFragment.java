@@ -32,6 +32,7 @@ public class FarmInfoFragment extends Fragment {
         return infoFragment;
     }
 
+    //required empty constructor
     public FarmInfoFragment() {
     }
 

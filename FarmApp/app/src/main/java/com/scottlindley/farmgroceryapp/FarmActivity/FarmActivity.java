@@ -43,7 +43,6 @@ public class FarmActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private MySQLiteHelper mHelper;
     private int mUserID;
-    private OnLikeButtonListener mListener;
     private FarmPagerAdapter mPagerAdapter;
 
     @Override
@@ -55,6 +54,7 @@ public class FarmActivity extends AppCompatActivity
 
         mHelper = MySQLiteHelper.getInstance(FarmActivity.this);
 
+        //this grabs the device's current user's ID
         SharedPreferences preferences = getSharedPreferences(FarmListActivity.PREFERENCES_KEY, MODE_PRIVATE);
         mUserID = preferences.getInt(FarmListActivity.DEVICE_USER_ID_KEY, -1);
         if(mUserID ==-1){finish();}
@@ -70,6 +70,7 @@ public class FarmActivity extends AppCompatActivity
         setToolBarTitle();
     }
 
+    //If back is pressed and the nav drawer is open, just close the nav bar
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -82,7 +83,6 @@ public class FarmActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_like) {
@@ -96,14 +96,12 @@ public class FarmActivity extends AppCompatActivity
         } else if (id == R.id.nav_farm_list){
             startActivity(new Intent(this, FarmListActivity.class));
         }
-
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    //This grabs the farm ID sent from the FarmList activity
     public void getReceivedIntent(){
         Intent receivedIntent = getIntent();
         mSelectedFarmID = receivedIntent.getIntExtra(FarmListRecyclerAdapter.FARM_ID_INTENT_KEY, -1);
@@ -111,6 +109,7 @@ public class FarmActivity extends AppCompatActivity
             finish();
         }
     }
+
 
     public void setUpFloatingActionButton(){
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -122,6 +121,7 @@ public class FarmActivity extends AppCompatActivity
         });
     }
 
+    //Some nav drawer set up.
     public void setUpNavBar(){
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -132,38 +132,34 @@ public class FarmActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        SharedPreferences preferences = getSharedPreferences(FarmListActivity.PREFERENCES_KEY, MODE_PRIVATE);
-        int DeviceUserID = preferences.getInt(FarmListActivity.DEVICE_USER_ID_KEY, -1);
-
         View headerView = navigationView.getHeaderView(0);
         TextView navUserName = (TextView)headerView.findViewById(R.id.nav_user_name);
         TextView navUserState = (TextView)headerView.findViewById(R.id.nav_user_state);
 
-        if(DeviceUserID!=-1) {
+        if(mUserID!=-1) {
             navUserName.setText(
-                    mHelper.getUserByID(DeviceUserID).getName());
+                    mHelper.getUserByID(mUserID).getName());
             navUserState.setText(
-                    mHelper.getUserByID(DeviceUserID).getState());
+                    mHelper.getUserByID(mUserID).getState());
         }
     }
 
+    //sets up view pager and tab layout
     public void setUpViewPagerAndTabs(){
         ViewPager viewPager = (ViewPager)findViewById(R.id.view_pager);
         mPagerAdapter = new FarmPagerAdapter(getSupportFragmentManager(), mSelectedFarmID);
         viewPager.setAdapter(mPagerAdapter);
 
-        mListener = (FarmLikesFragment) mPagerAdapter.getItem(2);
-
         TabLayout tabLayout = (TabLayout)findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-
-
     }
 
+    //This changes the title on the toolbar to the farm's name
     public void setToolBarTitle(){
         setTitle(mHelper.getFarmByID(mSelectedFarmID).getName());
     }
 
+    //This mainly deals with the 'like' button on the toolbar.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.farm_toolbar_menu, menu);
@@ -184,6 +180,8 @@ public class FarmActivity extends AppCompatActivity
         return true;
     }
 
+    /*when the 'like' button is selected toggle it's properties and add or remove the users
+    like from the current farm's list of likes*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         List<Like> userLikes = mHelper.getUserLikes(mUserID);
@@ -216,12 +214,14 @@ public class FarmActivity extends AppCompatActivity
         void onLikeButtonClicked(int farmID);
     }
 
+    //When resumed, refresh the adapter
     @Override
     protected void onPostResume() {
         super.onPostResume();
         mPagerAdapter.notifyDataSetChanged();
     }
 
+    //when paused, write any newly added cart items into the database
     @Override
     protected void onPause() {
         List<Food> cartItems = Cart.getInstance().getItems();

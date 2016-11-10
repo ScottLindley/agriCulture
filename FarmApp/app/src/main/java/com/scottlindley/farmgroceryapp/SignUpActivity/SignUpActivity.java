@@ -43,6 +43,7 @@ public class SignUpActivity extends AppCompatActivity {
                 mButtonText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //Add the new user to the database and save userID into SharedPreferences
                         if (!mNameEdit.getText().toString().equals("")
                                 && !mStateEdit.getText().toString().equals("")) {
                             User user = new User(

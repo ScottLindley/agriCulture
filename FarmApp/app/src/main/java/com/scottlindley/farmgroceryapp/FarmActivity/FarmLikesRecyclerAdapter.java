@@ -38,8 +38,8 @@ public class FarmLikesRecyclerAdapter extends RecyclerView.Adapter<FarmLikesRecy
         holder.mUserName.setText(MySQLiteHelper.getInstance(mContext).getUserByID(mLikes.get(position).getUserID()).getName());
 
         /*
-        States in the database are all lowercase to make searching easier this line
-        of code capitalizes the first letters of each word
+        States in the database are all lowercase to make searching easier this bit
+        of code capitalizes the first letters of each word before it is displayed
         */
         String[] statePieces = MySQLiteHelper.getInstance(mContext)
                 .getUserByID(mLikes.get(position).getUserID()).getState().split(" ");
