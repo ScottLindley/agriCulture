@@ -1,0 +1,53 @@
+Features:
+1.Can search for farms by name, food, or state
+2.Can purchase produce from farms
+3.Can remove items from shopping cart
+4.Can increase quantity of an item in shopping cart
+5.Can 'like' or 'unlike' a farm
+6.Users can edit their info (name and location)
+
+Case Statements:
+1.
+	-If the user searches a farm name, the list is narrowed to show that farm
+	-If the user searches a state, the list shows all farms located in that state
+	-If the user searches for a food, the list will show all farms that sell that food
+2.
+	-If the 'add to cart' button is pressed, the item will be stored in the user's cart
+	-On the cart page, if the 'place order' button is pressed, the order will be recorded in the user's previous orders list
+3.
+	-On the cart page, if the user decreases the quantity of an item to zero, leaves the cart page, and then returns the item will no
+	 longer be in the cart.
+4.
+	-If the user presses either the quantity up or quantity down button, the quantity number and the price information will reflect those
+	 actions.
+5.
+	-If the user is on a farm's page and he or she presses the 'like' button on the toolbar, a new like is created with the user's ID attached to it
+	-If the user likes a farm, his or her name appears on the farm's list of liked farms.
+	-On the user's 'liked farms' page, he or she can view, and then unlike any farm they currently 'like' by pressing a heart icon
+6.
+	-In the settings screen, if the user presses an 'edit info' button, he or she can type in new input to replace their current 
+	 name and location on record.
+
+User Stories:
+1.
+	-As a user, I can type in any state and see a list of farms found there
+	-As a user, I can search for a farm by it's name
+	-As a user, I can search for a food that I'm looking to buy and see a list of farms that sell that food.
+2.
+	-As a user, I can click on a farm. Then I can add some of their produce to my cart.
+	-As a user, I can go to my cart and see what I've selected to buy.
+	-As a user, I can place an order of all the items in my cart.
+3.
+	-As a user, I can increse or decrease the quantity of each item in my cart.
+4.
+	-As a user, I can decrease an item's quantity down to zero. If I do, then I upon returning to my cart, that item is gone.
+5.
+	-As a user, I can click the like button on any farms page.
+	-As a user, I can see my name on the farm's list of likes only if I currently like that farm.
+	-As a user, I can see a list of all the farms I like.
+	-As a user, I can unlike farms from that list without having to leave the page.
+6.
+	-As a user, I can go to a settings menu.
+	-As a user, I can choose to edit my profile
+	-As a user, I can enter a new name and location for my profile
+	-As a user, I can see these fields update as soon as submit my changes.
