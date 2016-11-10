@@ -2,6 +2,7 @@ package com.scottlindley.farmgroceryapp.CartActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -140,7 +142,11 @@ public class CartActivity extends AppCompatActivity
 
     public void setUpRecyclerView(){
         mRecyclerView = (RecyclerView)findViewById(R.id.cart_recycler);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            mRecyclerView.setLayoutManager(new GridLayoutManager(CartActivity.this, 2));
+        }
         List<Food> cartItems = MySQLiteHelper.getInstance(CartActivity.this).getCartItemsByUserID(mUserID);
         mAdapter = new CartRecyclerAdapter(CartActivity.this, cartItems);
         mRecyclerView.setAdapter(mAdapter);

@@ -47,7 +47,23 @@ public class LikedFarmsRecyclerAdapter extends RecyclerView.Adapter<LikedFarmsRe
                 .getFarmByID(mLikes.get(position).getFarmID());
         holder.mFarmPhoto.setImageResource(likedFarm.getPhotoID());
         holder.mFarmName.setText(likedFarm.getName());
-        holder.mFarmState.setText(likedFarm.getState());
+         /*
+        States in the database are all lowercase to make searching easier this line
+        of code capitalizes the first letters of each word
+        */
+        String[] statePieces = MySQLiteHelper.getInstance(mContext)
+                .getUserByID(mLikes.get(position).getUserID()).getState().split(" ");
+        String upperCaseState;
+        statePieces[0] = Character.toString(statePieces[0].charAt(0)).toUpperCase()+
+                statePieces[0].substring(1);
+        if(statePieces.length>1) {
+            statePieces[1] = " "+Character.toString(statePieces[1].charAt(0)).toUpperCase()+
+                    statePieces[1].substring(1);
+            upperCaseState = statePieces[0] + statePieces[1];
+        }else{
+            upperCaseState = statePieces[0];
+        }
+        holder.mFarmState.setText(upperCaseState);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

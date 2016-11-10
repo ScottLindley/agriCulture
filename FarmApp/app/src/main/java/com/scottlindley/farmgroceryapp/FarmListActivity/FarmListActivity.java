@@ -36,7 +36,9 @@ import com.scottlindley.farmgroceryapp.SettingsActivity.SettingsActivity;
 import com.scottlindley.farmgroceryapp.SignUpActivity.SignUpActivity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class FarmListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -120,6 +122,7 @@ public class FarmListActivity extends AppCompatActivity
                     .getFarmsByFood(query.toLowerCase());
             for(Farm farm : searchedFoods){
                 searchedFarms.add(farm);}
+            searchedFarms = removeSearchDuplicates(searchedFarms);
             mFarms = searchedFarms;
             mAdapter.replaceData(searchedFarms);
         }
@@ -230,5 +233,27 @@ public class FarmListActivity extends AppCompatActivity
         }
         mFarms = farms;
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+
+    /*
+    This removes any duplicate farms from search results.
+     */
+    public List<Farm> removeSearchDuplicates(List<Farm> farms){
+        ArrayList<Farm> noDupesfarms = new ArrayList<>();
+        ArrayList<Integer> farmIDS = new ArrayList<>();
+        for (Farm farm : farms){
+            farmIDS.add(farm.getID());
+        }
+        Set<Integer> set = new HashSet<>();
+        set.addAll(farmIDS);
+        farmIDS.clear();
+        farmIDS.addAll(set);
+
+        for (Integer ID : farmIDS){
+            noDupesfarms.add(MySQLiteHelper.getInstance(FarmListActivity.this)
+                .getFarmByID(ID));
+        }
+        return noDupesfarms;
     }
 }
