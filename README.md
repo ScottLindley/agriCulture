@@ -17,9 +17,9 @@ Lastly, the user can edit his or her account information from the settings navig
 ##Screenshots
 
 <p align="center">
-  <img src="screenshots/Screenshot_1" height="300px" /> <img src="screenshots/Screenshot_2" height="300px" />
+  <img src="screenshots/one.png" height="300px" /> <img src="screenshots/two.png" height="300px" />
 </p>
 <p align="center">
-  <img src="screenshots/Screenshot_3" height="300px" /> <img src="screenshots/Screenshot_4" height="300px" />
+  <img src="screenshots/three.png" height="300px" /> <img src="screenshots/four.png" height="300px" />
 </p>
 
